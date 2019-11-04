@@ -20,7 +20,7 @@ namespace Bunni.Resources.Modules
 
         public void Load()
         {
-            onLoad();
+            onLoad?.Invoke();
         }
 
         /// <summary>

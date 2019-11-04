@@ -1,8 +1,11 @@
-﻿using Bunni.Resources.Modules;
+﻿using Bunni.Resources.Components;
+using Bunni.Resources.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using UntitledDungeonGame.Resources;
+using UntitledDungeonGame.Resources.MainMenu;
 
 namespace UntitledDungeonGame
 {
@@ -20,16 +23,24 @@ namespace UntitledDungeonGame
         private int FpsCounter = 0;
         private int MilisecondsElapsed = 0;
 
-        public Scene CurrentScene;
+        public Scene MainMenuScene;
 
+        //public GameState CurrentGameState;
         private SpriteFont ArielFont;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Camera.Init(new Vector2(0, 0), graphics, 800, 480);
+            Camera.Init(new Vector2(400, 240), graphics, 800, 480);
             Camera.UpdateWindow(800, 480);
+            Camera.Zoom = 0.8f;
+
+            IsMouseVisible = true;
+            //CurrentGameState = GameState.MainMenu;
+
+            //scene constructors
+            MainMenuScene = new Scene();
         }
 
         /// <summary>
@@ -56,6 +67,19 @@ namespace UntitledDungeonGame
 
             // TODO: use this.Content to load your game content here
             ArielFont = Content.Load<SpriteFont>("Ariel");
+
+            //main menu content loading
+            //TODO: Create unloading if optimization issues occur
+
+            Texture2D PlayTexture = Content.Load<Texture2D>("Play");
+            PlayButton playButton = new PlayButton(PlayTexture);
+            MainMenuScene.AddEntity(playButton);
+
+            
+
+            SceneManager.ChangeScene(MainMenuScene);
+            //SceneManager.CurrentScene = MainMenuScene;
+
         }
 
         /// <summary>
@@ -65,6 +89,7 @@ namespace UntitledDungeonGame
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            
         }
 
         /// <summary>
@@ -77,7 +102,11 @@ namespace UntitledDungeonGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            // TODO: Add your update logic
+            SceneManager.CurrentScene.PreUpdate(gameTime);
+            SceneManager.CurrentScene.Update(gameTime);
+            SceneManager.CurrentScene.PostUpdate(gameTime);
+
 
 
             FpsCounter++;
@@ -107,7 +136,7 @@ namespace UntitledDungeonGame
 
             //game world sprite batch
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Camera.TransformMatrix());
-
+            SceneManager.CurrentScene.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

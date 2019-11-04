@@ -23,6 +23,5 @@ namespace Bunni.Resources.Components.Collision
         bool IntersectsOnLayer(ICollider c2);
         bool IntersectsWithTag(ICollider c2, BniTypes.Tag Tag);
         void ComponentAdded();
-        void PreUpdate(GameTime gameTime, Scene scene);
     }
 }

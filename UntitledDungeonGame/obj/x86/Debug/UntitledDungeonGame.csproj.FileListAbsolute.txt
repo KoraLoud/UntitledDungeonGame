@@ -22,3 +22,4 @@ D:\dev\UntitledDungeonGame\UntitledDungeonGame\obj\x86\Debug\UntitledDungeonGame
 D:\dev\UntitledDungeonGame\UntitledDungeonGame\obj\x86\Debug\UntitledDungeonGame.exe
 D:\dev\UntitledDungeonGame\UntitledDungeonGame\obj\x86\Debug\UntitledDungeonGame.pdb
 D:\dev\UntitledDungeonGame\UntitledDungeonGame\bin\Windows\x86\Debug\Content\Ariel.xnb
+D:\dev\UntitledDungeonGame\UntitledDungeonGame\bin\Windows\x86\Debug\Content\Play.xnb

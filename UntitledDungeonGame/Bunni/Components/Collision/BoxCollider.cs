@@ -57,18 +57,6 @@ namespace Bunni.Resources.Components.Collision
             }
         }
 
-
-
-        public void PreUpdate(GameTime gameTime, Scene scene)
-        {
-            Render rend = Parent.Parent.GetComponent<Render>();
-            if (rend != null)
-            {
-                Width = rend.Texture.Width;
-                Height = rend.Texture.Height;
-            }
-        }
-
         public bool Intersects(ICollider c2)
         {
             return !(c2.Left > Right

@@ -5,8 +5,10 @@
   <Config />
   <SourceFiles>
     <File>D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/File.spritefont</File>
+    <File>D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/Play.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Ariel.spritefont</File>
+    <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

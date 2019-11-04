@@ -53,10 +53,12 @@
     <Compile Include="Bunni\Modules\Component.cs" />
     <Compile Include="Bunni\Modules\Entity.cs" />
     <Compile Include="Bunni\Modules\Scene.cs" />
-    <Compile Include="Bunni\player1.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\GameState.cs" />
+    <Compile Include="Resources\MainMenu\PlayButton.cs" />
+    <Compile Include="Resources\SceneManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

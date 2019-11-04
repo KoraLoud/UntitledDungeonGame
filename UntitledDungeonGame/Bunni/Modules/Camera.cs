@@ -107,11 +107,9 @@ namespace Bunni.Resources.Modules
         /// <returns></returns>
         public static Vector2 GetMouseWorldPosition()
         {
-            Vector2 ScreenPosOfWorldPosition0 = WorldPosToScreenPos(new Vector2(0, 0));
             MouseState mouse = Mouse.GetState();
             Vector2 mouseCoors = new Vector2(mouse.X, mouse.Y);
-            Vector2 WorldPos = mouseCoors - ScreenPosOfWorldPosition0;
-            WorldPos = Vector2.Floor(WorldPos);
+            Vector2 WorldPos = Vector2.Transform(mouseCoors, Matrix.Invert(Transform));
             return WorldPos;
         }
 
