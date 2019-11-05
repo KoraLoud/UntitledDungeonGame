@@ -4,8 +4,8 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/File.spritefont</File>
-    <File>D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/Play.png</File>
+    <File>C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/File.spritefont</File>
+    <File>C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/Play.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Ariel.spritefont</File>
