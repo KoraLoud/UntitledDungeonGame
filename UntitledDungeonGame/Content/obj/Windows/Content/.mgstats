@@ -1,3 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/File.spritefont","D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/bin/Windows/Content/Ariel.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21521,0.2655595
-"D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/Play.png","D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/bin/Windows/Content/Play.xnb","TextureProcessor","Texture2DContent",2482,139797,0.1105712
+"C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/File.spritefont","C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/bin/Windows/Content/Ariel.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21521,1.519467
+"C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/Play.png","C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/bin/Windows/Content/Play.xnb","TextureProcessor","Texture2DContent",2482,139797,0.577492

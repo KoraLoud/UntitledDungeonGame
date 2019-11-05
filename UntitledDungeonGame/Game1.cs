@@ -23,7 +23,10 @@ namespace UntitledDungeonGame
         private int FpsCounter = 0;
         private int MilisecondsElapsed = 0;
 
+        public Color BackgroundColor = Color.DarkSlateGray;
+
         public Scene MainMenuScene;
+        public Scene MainGameScene;
 
         //public GameState CurrentGameState;
         private SpriteFont ArielFont;
@@ -41,6 +44,7 @@ namespace UntitledDungeonGame
 
             //scene constructors
             MainMenuScene = new Scene();
+            MainGameScene = new Scene();
         }
 
         /// <summary>
@@ -62,23 +66,39 @@ namespace UntitledDungeonGame
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
             ArielFont = Content.Load<SpriteFont>("Ariel");
 
-            //main menu content loading
-            //TODO: Create unloading if optimization issues occur
+            //main menu
+            {
+                Texture2D PlayTexture = Content.Load<Texture2D>("Play");
+                Render PlayRender = new Render(PlayTexture);
+                PositionVector PlayPosition = new PositionVector
+                {
+                    X = (Camera.VirtualWidth / 2) - PlayTexture.Width / 2,
+                    Y = (Camera.VirtualHeight / 4)
+                };
 
-            Texture2D PlayTexture = Content.Load<Texture2D>("Play");
-            PlayButton playButton = new PlayButton(PlayTexture);
-            MainMenuScene.AddEntity(playButton);
+                Button playButton = new Button();
+                playButton.AddComponent(PlayPosition);
+                playButton.AddComponent(PlayRender);
+                playButton.OnClick(() =>
+                    {
+                        SceneManager.ChangeScene(MainGameScene);
+                    });
+                MainMenuScene.AddEntity(playButton);
+            }
+
+            //game
+            MainGameScene.SetOnLoad(() =>
+            {
+                BackgroundColor = Color.Black;
+            });
+            
 
             
 
             SceneManager.ChangeScene(MainMenuScene);
-            //SceneManager.CurrentScene = MainMenuScene;
 
         }
 
@@ -127,7 +147,7 @@ namespace UntitledDungeonGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Gray);
+            GraphicsDevice.Clear(BackgroundColor);
 
             //UI spritebatch
             spriteBatch.Begin();
