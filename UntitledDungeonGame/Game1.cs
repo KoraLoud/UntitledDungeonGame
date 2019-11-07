@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using UntitledDungeonGame.Resources;
+using UntitledDungeonGame.Resources.Game;
 using UntitledDungeonGame.Resources.MainMenu;
 
 namespace UntitledDungeonGame
@@ -27,6 +29,8 @@ namespace UntitledDungeonGame
 
         public Scene MainMenuScene;
         public Scene MainGameScene;
+
+        public Dictionary<Tile, Texture2D> Textures = new Dictionary<Tile, Texture2D>();
 
         //public GameState CurrentGameState;
         private SpriteFont ArielFont;
@@ -69,6 +73,12 @@ namespace UntitledDungeonGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ArielFont = Content.Load<SpriteFont>("Ariel");
 
+            //load stuff
+            Texture2D stoneTexture = Content.Load<Texture2D>("Stone");
+            Textures.Add(Tile.Floor, stoneTexture);
+
+            Textures.Add(Tile.Wall, stoneTexture);
+
             //main menu
             {
                 Texture2D PlayTexture = Content.Load<Texture2D>("Play");
@@ -90,13 +100,14 @@ namespace UntitledDungeonGame
             }
 
             //game
+            
             MainGameScene.SetOnLoad(() =>
             {
                 BackgroundColor = Color.Black;
-            });
-            
+                //generate dungeon
+                Dungeon MainDungeon = new Dungeon(Textures);
 
-            
+            });
 
             SceneManager.ChangeScene(MainMenuScene);
 

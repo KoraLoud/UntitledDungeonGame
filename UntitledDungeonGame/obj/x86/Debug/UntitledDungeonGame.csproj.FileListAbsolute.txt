@@ -48,3 +48,4 @@ C:\Users\Kora\Documents\dev\untitleddungeongame\UntitledDungeonGame\obj\x86\Debu
 C:\Users\Kora\Documents\dev\untitleddungeongame\UntitledDungeonGame\obj\x86\Debug\UntitledDungeonGame.csproj.CopyComplete
 C:\Users\Kora\Documents\dev\untitleddungeongame\UntitledDungeonGame\obj\x86\Debug\UntitledDungeonGame.exe
 C:\Users\Kora\Documents\dev\untitleddungeongame\UntitledDungeonGame\obj\x86\Debug\UntitledDungeonGame.pdb
+C:\Users\Kora\Documents\dev\untitleddungeongame\UntitledDungeonGame\bin\Windows\x86\Debug\Content\Stone.xnb
