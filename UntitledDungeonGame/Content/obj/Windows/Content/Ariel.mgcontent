@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/File.spritefont</SourceFile>
-  <SourceTime>2019-11-05T09:06:30.4873668-05:00</SourceTime>
-  <DestFile>C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/bin/Windows/Content/Ariel.xnb</DestFile>
-  <DestTime>2019-11-05T09:11:05.7269773-05:00</DestTime>
+  <SourceFile>D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/File.spritefont</SourceFile>
+  <SourceTime>2019-07-17T07:22:50-04:00</SourceTime>
+  <DestFile>D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/bin/Windows/Content/Ariel.xnb</DestFile>
+  <DestTime>2019-11-08T01:27:33.3588557-05:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
-  <ImporterTime>2018-12-08T11:35:54-05:00</ImporterTime>
+  <ImporterTime>2019-07-17T07:23:00-04:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
-  <ProcessorTime>2018-12-08T11:35:54-05:00</ProcessorTime>
+  <ProcessorTime>2019-07-17T07:23:00-04:00</ProcessorTime>
   <Parameters>
     <Key>PremultiplyAlpha</Key>
     <Value>True</Value>

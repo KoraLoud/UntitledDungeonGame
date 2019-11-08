@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/Play.png</SourceFile>
-  <SourceTime>2019-11-05T09:06:30.4883572-05:00</SourceTime>
-  <DestFile>C:/Users/Kora/Documents/dev/untitleddungeongame/UntitledDungeonGame/Content/bin/Windows/Content/Play.xnb</DestFile>
-  <DestTime>2019-11-05T09:11:06.3405265-05:00</DestTime>
+  <SourceFile>D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/Play.png</SourceFile>
+  <SourceTime>2019-11-03T15:02:27.040193-05:00</SourceTime>
+  <DestFile>D:/dev/UntitledDungeonGame/UntitledDungeonGame/Content/bin/Windows/Content/Play.xnb</DestFile>
+  <DestTime>2019-11-08T01:27:33.5840076-05:00</DestTime>
   <Importer>TextureImporter</Importer>
-  <ImporterTime>2018-12-08T11:35:54-05:00</ImporterTime>
+  <ImporterTime>2019-07-17T07:23:00-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
-  <ProcessorTime>2018-12-08T11:35:54-05:00</ProcessorTime>
+  <ProcessorTime>2019-07-17T07:23:00-04:00</ProcessorTime>
   <Parameters>
     <Key>ColorKeyColor</Key>
     <Value>255,0,255,255</Value>

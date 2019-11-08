@@ -50,20 +50,61 @@ namespace UntitledDungeonGame.Resources.Game
             return tempArray;
         }
 
-        public void GenerateDungeon()
+        public void GenerateDungeon(int rooms)
         {
+            Rooms = rooms;
             DungeonArray = new DungeonRoom[Rooms, Rooms];
-            int lastMod = 0;
-            int currentX = 0;
+            int lastMod = 0; //last direction that the room moved in
+            int currentX = 0; //where the generation is currently at
             int currentY = 0;
+            int roomsCreated = 0;
             Random randNum = new Random();
-            for(int i=0;i<Rooms;i++)
+            while(roomsCreated<Rooms)
             {
-                int newdir = randNum.Next(1,5);
-                if(newdir%2==lastMod)
+                bool placed = false;
+                do
                 {
-                    
-                }
+                    int newdir = randNum.Next(4);
+                    if (newdir == Math.Abs(lastMod - 2)) //check to make sure it is not going backwards
+                    {
+                        newdir++;
+                        newdir %= 4;
+                    }
+                    int arrayX = 0;
+                    int arrayY = 0;
+                    switch (newdir) //get the x and y of new position
+                    {
+                        case 0:
+                            arrayX = currentX;
+                            arrayY = currentY - 1;
+                            break;
+                        case 1:
+                            arrayX = currentX + 1;
+                            arrayY = currentY;
+                            break;
+                        case 2:
+                            arrayX = currentX;
+                            arrayY = currentY - 1;
+                            break;
+                        case 3:
+                            arrayX = currentX - 1;
+                            arrayY = currentY;
+                            break;
+                    }
+                    if (!(arrayX < 0 || arrayY < 0 || arrayX > Rooms-1 || arrayY > Rooms-1)) //check to make sure it is not out of bounds
+                    {
+                        if(DungeonArray[arrayX, arrayY] == null)//add if null. if its not, the position moves into the already existing space, but does not write to it.
+                        {
+                            DungeonRoom newRoom = new DungeonRoom(); 
+                            newRoom.GenerateRoom();
+                            DungeonArray[arrayX, arrayY] = newRoom;
+                            roomsCreated++;
+                        }
+                        currentX = arrayX; //move
+                        currentY = arrayY;
+                        placed = true;
+                    }
+                } while (!placed);
             }
         }
 
@@ -73,17 +114,17 @@ namespace UntitledDungeonGame.Resources.Game
 
             public DungeonRoom()
             {
-                RoomArray = new Tile[10, 10];
+                RoomArray = new Tile[10, 10]; //generate floor tiles
             }
 
-            public void GenerateRoom()
+            public void GenerateRoom() //create walls along the edges (change this to actual room generation eventually)
             {
-                for (int i = 0; i < RoomArray.Length; i++)
+                for (int i = 0; i < RoomArray.GetUpperBound(0); i++)
                 {
                     RoomArray[0, i] = Tile.Wall;
-                    RoomArray[RoomArray.Length - 1, i] = Tile.Wall;
+                    RoomArray[RoomArray.GetUpperBound(0) - 1, i] = Tile.Wall;
                     RoomArray[i, 0] = Tile.Wall;
-                    RoomArray[RoomArray.Length - 1, i] = Tile.Wall;
+                    RoomArray[RoomArray.GetUpperBound(0) - 1, i] = Tile.Wall;
                 }
             }
         }

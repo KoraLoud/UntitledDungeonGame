@@ -106,6 +106,7 @@ namespace UntitledDungeonGame
                 BackgroundColor = Color.Black;
                 //generate dungeon
                 Dungeon MainDungeon = new Dungeon(Textures);
+                MainDungeon.GenerateDungeon(10);
 
             });
 
