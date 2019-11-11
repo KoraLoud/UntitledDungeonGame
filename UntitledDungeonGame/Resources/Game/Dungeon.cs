@@ -1,5 +1,6 @@
 ﻿using Bunni.Resources.Components;
 using Bunni.Resources.Modules;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -31,17 +32,21 @@ namespace UntitledDungeonGame.Resources.Game
 
         public Entity[,] BuildRoom(DungeonRoom room)
         {
-            Entity[,] tempArray = new Entity[room.RoomArray.Length, room.RoomArray.Length];
-            for(int i=0;i<room.RoomArray.GetUpperBound(0);i++)
+            Entity[,] tempArray = new Entity[room.RoomArray.GetUpperBound(0)+1, room.RoomArray.GetUpperBound(1)+1];
+            for(int i=0;i<room.RoomArray.GetUpperBound(0)+1;i++)
             {
-                for(int j=0;i<room.RoomArray.GetUpperBound(1);j++)
+                for(int j=0;j<room.RoomArray.GetUpperBound(1)+1;j++)
                 {
                     PositionVector tempPos = new PositionVector();
                     Render tempRend = new Render(Textures[room.RoomArray[i,j]]);
                     tempPos.X = i * Textures[room.RoomArray[i, j]].Width;
                     tempPos.Y = j * Textures[room.RoomArray[i, j]].Height;
+                    //Console.WriteLine(j * Textures[room.RoomArray[i, j]].Height);
                     Entity tempEntity = new Entity();
-
+                    if(room.RoomArray[i,j] == Tile.Wall)
+                    {
+                        tempRend.Color = Color.Red;
+                    }
                     tempEntity.AddComponent(tempPos);
                     tempEntity.AddComponent(tempRend);
                     tempArray[i, j] = tempEntity;
@@ -114,17 +119,17 @@ namespace UntitledDungeonGame.Resources.Game
 
             public DungeonRoom()
             {
-                RoomArray = new Tile[10, 10]; //generate floor tiles
+                RoomArray = new Tile[6,12]; //generate floor tiles
             }
 
             public void GenerateRoom() //create walls along the edges (change this to actual room generation eventually)
             {
-                for (int i = 0; i < RoomArray.GetUpperBound(0); i++)
+                for (int i = 0; i < Math.Max(RoomArray.GetUpperBound(0)+1, RoomArray.GetUpperBound(1)+1); i++)
                 {
-                    RoomArray[0, i] = Tile.Wall;
-                    RoomArray[RoomArray.GetUpperBound(0) - 1, i] = Tile.Wall;
-                    RoomArray[i, 0] = Tile.Wall;
-                    RoomArray[RoomArray.GetUpperBound(0) - 1, i] = Tile.Wall;
+                    RoomArray[0, Math.Min(i, RoomArray.GetUpperBound(1))] = Tile.Wall; //fill left
+                    RoomArray[RoomArray.GetUpperBound(0), Math.Min(i, RoomArray.GetUpperBound(1))] = Tile.Wall; //fill right
+                    RoomArray[Math.Min(i, RoomArray.GetUpperBound(0)), 0] = Tile.Wall; //fill top
+                    RoomArray[Math.Min(i, RoomArray.GetUpperBound(0)), RoomArray.GetUpperBound(1)] = Tile.Wall; //fill bottom
                 }
             }
         }

@@ -14,10 +14,12 @@ namespace UntitledDungeonGame
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class Engine : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        public Entity CameraDude;
 
         public string Title = "Untitled Dungeon Game";
 
@@ -35,7 +37,9 @@ namespace UntitledDungeonGame
         //public GameState CurrentGameState;
         private SpriteFont ArielFont;
 
-        public Game1()
+        public Dungeon MainDungeon;
+
+        public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -60,6 +64,60 @@ namespace UntitledDungeonGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            CameraDude = new Entity(); //entity that exists just to hold our logic for moving camera
+            Input cameraDudeInput = new Input();
+            int cameraSpeed = 5;
+            cameraDudeInput.BindKey(Keys.W, (pressed, held) =>
+            {
+                if (pressed || held)
+                {
+                    Camera.Position = new Vector2(Camera.Position.X, Camera.Position.Y - cameraSpeed);
+                }
+            });
+
+            cameraDudeInput.BindKey(Keys.A, (pressed, held) =>
+            {
+                if (pressed || held)
+                {
+                    Camera.Position = new Vector2(Camera.Position.X-cameraSpeed, Camera.Position.Y);
+                }
+            });
+
+            cameraDudeInput.BindKey(Keys.S, (pressed, held) =>
+            {
+                if (pressed || held)
+                {
+                    Camera.Position = new Vector2(Camera.Position.X, Camera.Position.Y + cameraSpeed);
+                }
+            });
+
+            cameraDudeInput.BindKey(Keys.D, (pressed, held) =>
+            {
+                if (pressed || held)
+                {
+                    Camera.Position = new Vector2(Camera.Position.X+cameraSpeed, Camera.Position.Y);
+                }
+            });
+
+            cameraDudeInput.BindKey(Keys.Q, (pressed, held) =>
+            {
+                if(pressed||held)
+                {
+                    Camera.Zoom -= 0.01f;
+                }
+            });
+
+            cameraDudeInput.BindKey(Keys.E, (pressed, held) =>
+            {
+                if (pressed || held)
+                {
+                    Camera.Zoom += 0.01f;
+                }
+            });
+
+            CameraDude.AddComponent(cameraDudeInput);
+
 
             base.Initialize();
         }
@@ -100,14 +158,30 @@ namespace UntitledDungeonGame
             }
 
             //game
-            
+
             MainGameScene.SetOnLoad(() =>
             {
                 BackgroundColor = Color.Black;
                 //generate dungeon
-                Dungeon MainDungeon = new Dungeon(Textures);
+                MainDungeon = new Dungeon(Textures);
                 MainDungeon.GenerateDungeon(10);
+                MainDungeon.CurrentRoom = MainDungeon.DungeonArray[0, 0];
 
+                Entity[,] roomEntities = MainDungeon.BuildRoom(MainDungeon.CurrentRoom);
+                Console.WriteLine(roomEntities);
+                Console.WriteLine(roomEntities.GetUpperBound(1));
+
+                for (int i = 0; i < roomEntities.GetUpperBound(0)+1; i++)
+                {
+                    for (int j = 0; j < roomEntities.GetUpperBound(1)+1; j++)
+                    {
+                        if (roomEntities[i,j] != null)
+                        {
+                            MainGameScene.AddEntity(roomEntities[i, j]);
+                        }
+                    }
+                }
+                MainGameScene.AddEntity(CameraDude);
             });
 
             SceneManager.ChangeScene(MainMenuScene);
@@ -136,7 +210,13 @@ namespace UntitledDungeonGame
 
             // TODO: Add your update logic
             SceneManager.CurrentScene.PreUpdate(gameTime);
+
+
+            //Console.WriteLine(Camera.GetMouseWorldPosition());
             SceneManager.CurrentScene.Update(gameTime);
+
+
+
             SceneManager.CurrentScene.PostUpdate(gameTime);
 
 
