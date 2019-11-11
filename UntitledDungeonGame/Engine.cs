@@ -104,7 +104,7 @@ namespace UntitledDungeonGame
             {
                 if(pressed||held)
                 {
-                    Camera.Zoom -= 0.01f;
+                    Camera.Zoom -= 0.001f;
                 }
             });
 
@@ -112,7 +112,7 @@ namespace UntitledDungeonGame
             {
                 if (pressed || held)
                 {
-                    Camera.Zoom += 0.01f;
+                    Camera.Zoom += 0.001f;
                 }
             });
 
@@ -199,6 +199,7 @@ namespace UntitledDungeonGame
                                         p.X += (((roomEntities.GetUpperBound(0) + 1) * Textures[Tile.Floor].Width) * i);
                                         p.Y += (((roomEntities.GetUpperBound(0) + 1) * Textures[Tile.Floor].Height) * j);
 
+                                        Camera.Position = new Vector2(p.X, p.Y);
                                         MainGameScene.AddEntity(roomEntities[ia, ja]);
                                     }
                                 }
@@ -207,7 +208,6 @@ namespace UntitledDungeonGame
                     }
                 }
 
-                //Camera.Position = new Vector2(((5 * Textures[Tile.Floor].Width) + (10 * Textures[Tile.Floor].Width))*5, ((5 * Textures[Tile.Floor].Height) + (10 * Textures[Tile.Floor].Height)) * 5);
                 MainGameScene.AddEntity(CameraDude);
             });
 
@@ -240,6 +240,7 @@ namespace UntitledDungeonGame
 
 
             //Console.WriteLine(Camera.GetMouseWorldPosition());
+            //Console.WriteLine(Camera.GetMouseWorldPosition());
             SceneManager.CurrentScene.Update(gameTime);
 
 
@@ -248,7 +249,7 @@ namespace UntitledDungeonGame
 
 
 
-            FpsCounter++;
+            /*FpsCounter++;
             MilisecondsElapsed += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if(MilisecondsElapsed >= 1000)
             {
@@ -256,7 +257,7 @@ namespace UntitledDungeonGame
                 FpsCounter = 0;
                 MilisecondsElapsed = 0;
             }
-            Window.Title = Title + " - FPS: " + FPS;
+            Window.Title = Title + " - FPS: " + FPS; */
             base.Update(gameTime);
         }
 
@@ -267,6 +268,16 @@ namespace UntitledDungeonGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(BackgroundColor);
+
+            FpsCounter++;
+            MilisecondsElapsed += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (MilisecondsElapsed >= 1000)
+            {
+                FPS = FpsCounter;
+                FpsCounter = 0;
+                MilisecondsElapsed = 0;
+            }
+            Window.Title = Title + " - FPS: " + FPS;
 
             //UI spritebatch
             spriteBatch.Begin();
