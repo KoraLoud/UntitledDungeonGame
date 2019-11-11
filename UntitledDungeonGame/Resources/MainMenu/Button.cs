@@ -34,26 +34,6 @@ namespace UntitledDungeonGame.Resources.MainMenu
             MouseState mouseState = Mouse.GetState();
             PositionVector pos = GetComponent<PositionVector>();
             Render rendComp = GetComponent<Render>();
-            /*if (mouseState.LeftButton == ButtonState.Pressed)
-            {
-                if (!(pos.X > mousePos.X
-                    || pos.X + rendComp.Texture.Width < mousePos.X
-                    || pos.Y > mousePos.Y
-                    || pos.Y + rendComp.Texture.Height < mousePos.Y
-                    ))
-                {
-                    if(!Clicked)
-                    {
-                        OnClick?.Invoke();
-                        Clicked = true;
-                    }
-                }
-            }
-            else
-            {
-                Clicked = false;
-            }*/
-
             if (!(pos.X > mousePos.X
                     || pos.X + rendComp.Texture.Width < mousePos.X
                     || pos.Y > mousePos.Y

@@ -43,8 +43,8 @@ namespace UntitledDungeonGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Camera.Init(new Vector2(400, 240), graphics, 800, 480);
-            Camera.UpdateWindow(800, 480);
+            Camera.Init(new Vector2(400*2, 240*2), graphics, 800*2, 480*2);
+            Camera.UpdateWindow(800*2, 480*2);
             Camera.Zoom = 0.8f;
 
             IsMouseVisible = true;
@@ -72,7 +72,7 @@ namespace UntitledDungeonGame
             {
                 if (pressed || held)
                 {
-                    Camera.Position = new Vector2(Camera.Position.X, Camera.Position.Y - cameraSpeed);
+                    Camera.Position = new Vector2(Camera.Position.X, Camera.Position.Y - cameraSpeed/Camera.Zoom);
                 }
             });
 
@@ -80,7 +80,7 @@ namespace UntitledDungeonGame
             {
                 if (pressed || held)
                 {
-                    Camera.Position = new Vector2(Camera.Position.X-cameraSpeed, Camera.Position.Y);
+                    Camera.Position = new Vector2(Camera.Position.X-cameraSpeed/Camera.Zoom, Camera.Position.Y);
                 }
             });
 
@@ -88,7 +88,7 @@ namespace UntitledDungeonGame
             {
                 if (pressed || held)
                 {
-                    Camera.Position = new Vector2(Camera.Position.X, Camera.Position.Y + cameraSpeed);
+                    Camera.Position = new Vector2(Camera.Position.X, Camera.Position.Y + cameraSpeed/Camera.Zoom);
                 }
             });
 
@@ -96,7 +96,7 @@ namespace UntitledDungeonGame
             {
                 if (pressed || held)
                 {
-                    Camera.Position = new Vector2(Camera.Position.X+cameraSpeed, Camera.Position.Y);
+                    Camera.Position = new Vector2(Camera.Position.X+cameraSpeed/Camera.Zoom, Camera.Position.Y);
                 }
             });
 
@@ -158,18 +158,17 @@ namespace UntitledDungeonGame
             }
 
             //game
+            int rooms = 100;
 
             MainGameScene.SetOnLoad(() =>
             {
                 BackgroundColor = Color.Black;
                 //generate dungeon
                 MainDungeon = new Dungeon(Textures);
-                MainDungeon.GenerateDungeon(10);
+                MainDungeon.GenerateDungeon(rooms);
                 MainDungeon.CurrentRoom = MainDungeon.DungeonArray[0, 0];
-
+                /*
                 Entity[,] roomEntities = MainDungeon.BuildRoom(MainDungeon.CurrentRoom);
-                Console.WriteLine(roomEntities);
-                Console.WriteLine(roomEntities.GetUpperBound(1));
 
                 for (int i = 0; i < roomEntities.GetUpperBound(0)+1; i++)
                 {
@@ -180,7 +179,35 @@ namespace UntitledDungeonGame
                             MainGameScene.AddEntity(roomEntities[i, j]);
                         }
                     }
+                }*/
+
+                for(int i=0;i<MainDungeon.DungeonArray.GetUpperBound(0)+1;i++)
+                {
+                    for(int j=0;j<MainDungeon.DungeonArray.GetUpperBound(1)+1;j++)
+                    {
+                        if(MainDungeon.DungeonArray[i,j] != null)
+                        {
+                            Entity[,] roomEntities = MainDungeon.BuildRoom(MainDungeon.DungeonArray[i, j]);
+
+                            for (int ia = 0; ia < roomEntities.GetUpperBound(0) + 1; ia++)
+                            {
+                                for (int ja = 0; ja < roomEntities.GetUpperBound(1) + 1; ja++)
+                                {
+                                    if (roomEntities[ia, ja] != null)
+                                    {
+                                        PositionVector p = roomEntities[ia, ja].GetComponent<PositionVector>();
+                                        p.X += (((roomEntities.GetUpperBound(0) + 1) * Textures[Tile.Floor].Width) * i);
+                                        p.Y += (((roomEntities.GetUpperBound(0) + 1) * Textures[Tile.Floor].Height) * j);
+
+                                        MainGameScene.AddEntity(roomEntities[ia, ja]);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+
+                //Camera.Position = new Vector2(((5 * Textures[Tile.Floor].Width) + (10 * Textures[Tile.Floor].Width))*5, ((5 * Textures[Tile.Floor].Height) + (10 * Textures[Tile.Floor].Height)) * 5);
                 MainGameScene.AddEntity(CameraDude);
             });
 

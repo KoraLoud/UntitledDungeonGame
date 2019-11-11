@@ -60,8 +60,8 @@ namespace UntitledDungeonGame.Resources.Game
             Rooms = rooms;
             DungeonArray = new DungeonRoom[Rooms, Rooms];
             int lastMod = 0; //last direction that the room moved in
-            int currentX = 0; //where the generation is currently at
-            int currentY = 0;
+            int currentX = rooms/2; //where the generation is currently at
+            int currentY = rooms/2;
             int roomsCreated = 0;
             Random randNum = new Random();
             while(roomsCreated<Rooms)
@@ -89,7 +89,7 @@ namespace UntitledDungeonGame.Resources.Game
                             break;
                         case 2:
                             arrayX = currentX;
-                            arrayY = currentY - 1;
+                            arrayY = currentY + 1;
                             break;
                         case 3:
                             arrayX = currentX - 1;
@@ -119,7 +119,7 @@ namespace UntitledDungeonGame.Resources.Game
 
             public DungeonRoom()
             {
-                RoomArray = new Tile[6,12]; //generate floor tiles
+                RoomArray = new Tile[10,10]; //generate floor tiles
             }
 
             public void GenerateRoom() //create walls along the edges (change this to actual room generation eventually)
