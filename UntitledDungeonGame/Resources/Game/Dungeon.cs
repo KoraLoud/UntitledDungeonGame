@@ -43,9 +43,13 @@ namespace UntitledDungeonGame.Resources.Game
                     tempPos.Y = j * Textures[room.RoomArray[i, j]].Height;
                     //Console.WriteLine(j * Textures[room.RoomArray[i, j]].Height);
                     Entity tempEntity = new Entity();
-                    if(room.RoomArray[i,j] == Tile.Wall)
+                    if (room.RoomArray[i, j] == Tile.Wall)
                     {
                         tempRend.Color = Color.Red;
+                    }
+                    else if(room.RoomArray[i, j] == Tile.Doorway)
+                    {
+                        tempRend.Color = Color.Purple;
                     }
                     tempEntity.AddComponent(tempPos);
                     tempEntity.AddComponent(tempRend);
@@ -100,7 +104,8 @@ namespace UntitledDungeonGame.Resources.Game
                     {
                         if(DungeonArray[arrayX, arrayY] == null)//add if null. if its not, the position moves into the already existing space, but does not write to it.
                         {
-                            DungeonRoom newRoom = new DungeonRoom(); 
+                            DungeonRoom newRoom = new DungeonRoom();
+
                             newRoom.GenerateRoom();
                             DungeonArray[arrayX, arrayY] = newRoom;
                             roomsCreated++;
@@ -110,6 +115,44 @@ namespace UntitledDungeonGame.Resources.Game
                         placed = true;
                     }
                 } while (!placed);
+            }
+            BuildDoors();
+        }
+
+        private void BuildDoors() //builds doors. checks if any rooms exist above, or to the left. those are the only 2 checkes needed to connect every room together
+        {
+            Random randNum = new Random();
+            for (int i=0;i<DungeonArray.GetUpperBound(0)+1;i++)
+            {
+                for(int j=0;j<DungeonArray.GetUpperBound(1)+1;j++)
+                {
+                    if(DungeonArray[i,j] != null)
+                    {
+                        if(j != 0 && DungeonArray[i, j-1] != null) //if room exists above
+                        {
+                            DungeonRoom dungeonRoom = DungeonArray[i, j];
+                            DungeonRoom neighbor = DungeonArray[i, j - 1];
+                                
+                            //get random tile to make into door
+                            int randomDoor = randNum.Next(1, dungeonRoom.RoomArray.GetUpperBound(0)-1);
+                            //get tile in current room, change to door. get same tile in room above, change it as well
+                            dungeonRoom.RoomArray[randomDoor, 0] = Tile.Doorway;
+                            neighbor.RoomArray[randomDoor, neighbor.RoomArray.GetUpperBound(1)] = Tile.Doorway;
+                        }
+                        if(i != 0 && DungeonArray[i-1, j] != null)
+                        {
+                            DungeonRoom dungeonRoom = DungeonArray[i, j];
+                            DungeonRoom neighbor = DungeonArray[i-1, j];
+
+                            //get random tile to make into door
+                            int randomDoor = randNum.Next(1, dungeonRoom.RoomArray.GetUpperBound(1) - 1);
+                            //get tile in current room, change to door. get same tile in room to the left, change it as well
+                            dungeonRoom.RoomArray[0, randomDoor] = Tile.Doorway;
+                            neighbor.RoomArray[neighbor.RoomArray.GetUpperBound(0), randomDoor] = Tile.Doorway;
+
+                        }
+                    }
+                }
             }
         }
 
@@ -130,8 +173,11 @@ namespace UntitledDungeonGame.Resources.Game
                     RoomArray[RoomArray.GetUpperBound(0), Math.Min(i, RoomArray.GetUpperBound(1))] = Tile.Wall; //fill right
                     RoomArray[Math.Min(i, RoomArray.GetUpperBound(0)), 0] = Tile.Wall; //fill top
                     RoomArray[Math.Min(i, RoomArray.GetUpperBound(0)), RoomArray.GetUpperBound(1)] = Tile.Wall; //fill bottom
+                    
                 }
             }
         }
+
+
     }
 }

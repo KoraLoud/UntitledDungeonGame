@@ -9,6 +9,7 @@ namespace UntitledDungeonGame.Resources.Game
     public enum Tile
     {
         Floor,
-        Wall
+        Wall,
+        Doorway
     }
 }

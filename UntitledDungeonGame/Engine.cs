@@ -134,8 +134,9 @@ namespace UntitledDungeonGame
             //load stuff
             Texture2D stoneTexture = Content.Load<Texture2D>("Stone");
             Textures.Add(Tile.Floor, stoneTexture);
-
             Textures.Add(Tile.Wall, stoneTexture);
+            Textures.Add(Tile.Doorway, stoneTexture);
+
 
             //main menu
             {
