@@ -32,8 +32,6 @@ namespace UntitledDungeonGame
         public Scene MainMenuScene;
         public Scene MainGameScene;
 
-        public Dictionary<Tile, Texture2D> Textures = new Dictionary<Tile, Texture2D>();
-
         //public GameState CurrentGameState;
         private SpriteFont ArielFont;
 
@@ -43,8 +41,8 @@ namespace UntitledDungeonGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Camera.Init(new Vector2(400*2, 240*2), graphics, 800*2, 480*2);
-            Camera.UpdateWindow(800*2, 480*2);
+            Camera.Init(new Vector2(400, 240), graphics, 800, 480);
+            Camera.UpdateWindow(800, 480);
             Camera.Zoom = 0.8f;
 
             IsMouseVisible = true;
@@ -129,13 +127,12 @@ namespace UntitledDungeonGame
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            ArielFont = Content.Load<SpriteFont>("Ariel");
 
             //load stuff
             Texture2D stoneTexture = Content.Load<Texture2D>("Stone");
-            Textures.Add(Tile.Floor, stoneTexture);
-            Textures.Add(Tile.Wall, stoneTexture);
-            Textures.Add(Tile.Doorway, stoneTexture);
+            Globals.Textures.Add(Tile.Floor, stoneTexture);
+            Globals.Textures.Add(Tile.Wall, stoneTexture);
+            Globals.Textures.Add(Tile.Doorway, stoneTexture);
 
 
             //main menu
@@ -159,56 +156,13 @@ namespace UntitledDungeonGame
             }
 
             //game
-            int rooms = 100;
 
             MainGameScene.SetOnLoad(() =>
             {
                 BackgroundColor = Color.Black;
                 //generate dungeon
-                MainDungeon = new Dungeon(Textures);
-                MainDungeon.GenerateDungeon(rooms);
-                MainDungeon.CurrentRoom = MainDungeon.DungeonArray[0, 0];
-                /*
-                Entity[,] roomEntities = MainDungeon.BuildRoom(MainDungeon.CurrentRoom);
-
-                for (int i = 0; i < roomEntities.GetUpperBound(0)+1; i++)
-                {
-                    for (int j = 0; j < roomEntities.GetUpperBound(1)+1; j++)
-                    {
-                        if (roomEntities[i,j] != null)
-                        {
-                            MainGameScene.AddEntity(roomEntities[i, j]);
-                        }
-                    }
-                }*/
-
-                for(int i=0;i<MainDungeon.DungeonArray.GetUpperBound(0)+1;i++)
-                {
-                    for(int j=0;j<MainDungeon.DungeonArray.GetUpperBound(1)+1;j++)
-                    {
-                        if(MainDungeon.DungeonArray[i,j] != null)
-                        {
-                            Entity[,] roomEntities = MainDungeon.BuildRoom(MainDungeon.DungeonArray[i, j]);
-
-                            for (int ia = 0; ia < roomEntities.GetUpperBound(0) + 1; ia++)
-                            {
-                                for (int ja = 0; ja < roomEntities.GetUpperBound(1) + 1; ja++)
-                                {
-                                    if (roomEntities[ia, ja] != null)
-                                    {
-                                        PositionVector p = roomEntities[ia, ja].GetComponent<PositionVector>();
-                                        p.X += (((roomEntities.GetUpperBound(0) + 1) * Textures[Tile.Floor].Width) * i);
-                                        p.Y += (((roomEntities.GetUpperBound(0) + 1) * Textures[Tile.Floor].Height) * j);
-
-                                        Camera.Position = new Vector2(p.X, p.Y);
-                                        MainGameScene.AddEntity(roomEntities[ia, ja]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
+                MainDungeon = new Dungeon(50, 2, 4, 20, 20);
+                MainGameScene.SceneEntities.AddRange(MainDungeon.GetEntities());
                 MainGameScene.AddEntity(CameraDude);
             });
 
