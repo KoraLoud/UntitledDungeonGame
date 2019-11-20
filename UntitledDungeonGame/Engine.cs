@@ -33,7 +33,6 @@ namespace UntitledDungeonGame
         public Scene MainGameScene;
 
         //public GameState CurrentGameState;
-        private SpriteFont ArielFont;
 
         public Dungeon MainDungeon;
 
@@ -102,7 +101,7 @@ namespace UntitledDungeonGame
             {
                 if(pressed||held)
                 {
-                    Camera.Zoom -= 0.001f;
+                    Camera.Zoom -= 0.01f;
                 }
             });
 
@@ -110,7 +109,7 @@ namespace UntitledDungeonGame
             {
                 if (pressed || held)
                 {
-                    Camera.Zoom += 0.001f;
+                    Camera.Zoom += 0.01f;
                 }
             });
 
@@ -132,7 +131,6 @@ namespace UntitledDungeonGame
             Texture2D stoneTexture = Content.Load<Texture2D>("Stone");
             Globals.Textures.Add(Tile.Floor, stoneTexture);
             Globals.Textures.Add(Tile.Wall, stoneTexture);
-            Globals.Textures.Add(Tile.Doorway, stoneTexture);
 
 
             //main menu
@@ -161,8 +159,29 @@ namespace UntitledDungeonGame
             {
                 BackgroundColor = Color.Black;
                 //generate dungeon
-                MainDungeon = new Dungeon(50, 2, 4, 20, 20);
-                MainGameScene.SceneEntities.AddRange(MainDungeon.GetEntities());
+                MainDungeon = new Dungeon(15, 3, 6,25, 25);
+
+                //add dungeon grid to scene entities
+                for(int i=0;i<MainDungeon.DungeonWidth;i++)
+                {
+                    for(int j=0;j<MainDungeon.DungeonHeight;j++)
+                    {
+                        if(MainDungeon.DungeonGrid[i,j] != null)
+                        {
+                            switch(MainDungeon.DungeonGrid[i,j].Tag)
+                            {
+                                case BniTypes.Tag.Wall:
+                                    MainDungeon.DungeonGrid[i, j].GetComponent<Render>().Color = Color.Red;
+                                    break;
+                                default:
+                                    MainDungeon.DungeonGrid[i, j].GetComponent<Render>().Color = Color.White;
+                                    break;
+                            }
+                            MainGameScene.AddEntity(MainDungeon.DungeonGrid[i, j]);
+                        }
+                    }
+                }
+
                 MainGameScene.AddEntity(CameraDude);
             });
 

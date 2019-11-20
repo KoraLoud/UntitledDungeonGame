@@ -26,7 +26,8 @@ namespace Bunni.Resources.Modules
             Player,
             Enemy,
             Floor,
-            Wall
+            Wall,
+            Air
         }
     }
 }

@@ -13,6 +13,8 @@ namespace UntitledDungeonGame.Resources.Game
     public class Dungeon
     {
         public List<DungeonRoom> Rooms;
+        public Entity[,] DungeonGrid;
+
         public int MaxRooms;
         public int RoomMinSize;
         public int RoomMaxSize;
@@ -28,6 +30,7 @@ namespace UntitledDungeonGame.Resources.Game
             RoomMaxSize = roomMaxSize;
             DungeonWidth = dungeonWidth;
             DungeonHeight = dungeonHeight;
+            DungeonGrid = new Entity[dungeonWidth, dungeonHeight];
             BuildDungeon();
 
         }
@@ -42,8 +45,8 @@ namespace UntitledDungeonGame.Resources.Game
                 int roomWidth = randInt.Next(RoomMinSize, RoomMaxSize);
                 int roomHeight = randInt.Next(RoomMinSize, RoomMaxSize);
 
-                int roomY = randInt.Next(0, DungeonHeight - roomHeight);
-                int roomX = randInt.Next(0, DungeonWidth - roomWidth);
+                int roomY = randInt.Next(1, DungeonHeight - roomHeight - 1);
+                int roomX = randInt.Next(1, DungeonWidth - roomWidth - 1);
 
                 Rectangle roomRect = new Rectangle(roomX, roomY, roomWidth, roomHeight);
                 bool place = true;
@@ -61,26 +64,148 @@ namespace UntitledDungeonGame.Resources.Game
                     Rooms.Add(Room);
                 }
             }
-
+            RoomsToDungeonGrid(); //write rooms into grid
+            BuildHallways();
+            BuildWalls();
         }
 
-        public List<Entity> GetEntities()
+        private void RoomsToDungeonGrid()
         {
-            List<Entity> entities = new List<Entity>();
             for(int i=0;i<Rooms.Count;i++)
             {
-                DungeonRoom cRoom = Rooms.ElementAt(i); //get the room
-                Entity[,] roomEntityArray = cRoom.GetEntities(); //get all the entities in the room
-                for(int j=0;j<cRoom.RoomWidth;j++) //loop through the 2D array
+                DungeonRoom cRoom = Rooms.ElementAt(i);
+                for(int j=0;j<cRoom.RoomWidth;j++)
                 {
                     for(int k=0;k<cRoom.RoomHeight;k++)
                     {
-                        entities.Add(roomEntityArray[j, k]); //add it to the list
-                        Camera.Position = roomEntityArray[j, k].GetComponent<PositionVector>().Position;
+                        DungeonGrid[cRoom.RoomX + j, cRoom.RoomY + k] = cRoom.RoomEntities[j,k];
                     }
                 }
             }
-            return entities;
+        }
+
+        private void PlaceHorizontal(int x1, int x2, int y)
+        {
+            if(x1>0 && x1<DungeonWidth && x2>0 && x2<DungeonWidth)
+            {
+                if (x1 < x2) //build to the right
+                {
+                    for (int i = 0; i < x2 - x1; i++)
+                    {
+                        Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Floor]);
+                        PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
+                        posEnt.X = (x1 + i) * Globals.TILE_WIDTH;
+                        posEnt.Y = y * Globals.TILE_HEIGHT;
+                        tempEnt.Tag = BniTypes.Tag.Floor;
+                        DungeonGrid[x1 + i, y] = tempEnt;
+                    }
+                }else if(x1 > x2) //build to the left
+                {
+                    for(int i=x1;i>x2;i--)
+                    {
+                        Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Floor]);
+                        PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
+                        posEnt.X = i * Globals.TILE_WIDTH;
+                        posEnt.Y = y * Globals.TILE_HEIGHT;
+                        tempEnt.Tag = BniTypes.Tag.Floor;
+                        DungeonGrid[i, y] = tempEnt;
+                    }
+                }
+            }
+        }
+
+        public void PlaceVertical(int y1, int y2, int x)
+        {
+            if (y1 > 0 && y1 < DungeonHeight && y2 > 0 && y2 < DungeonHeight)
+            {
+                if (y1 < y2) //build up
+                {
+                    for (int i = 0; i < y2 - y1; i++)
+                    {
+                        Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Floor]);
+                        PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
+                        posEnt.X = x * Globals.TILE_WIDTH;
+                        posEnt.Y = (y1+i) * Globals.TILE_HEIGHT;
+                        tempEnt.Tag = BniTypes.Tag.Floor;
+                        DungeonGrid[x, y1+i] = tempEnt;
+                    }
+                }
+                else if (y1 > y2) //build down
+                {
+                    for (int i = y1; i > y2; i--)
+                    {
+                        Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Floor]);
+                        PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
+                        posEnt.X = x * Globals.TILE_WIDTH;
+                        posEnt.Y = i * Globals.TILE_HEIGHT;
+                        tempEnt.Tag = BniTypes.Tag.Floor;
+                        DungeonGrid[x,i] = tempEnt;
+                    }
+                }
+            }
+        }
+
+
+
+        private void BuildHallways()
+        {
+            Random randInt = new Random();
+            for(int i=0;i<Rooms.Count-1;i++)
+            {
+                DungeonRoom cRoom = Rooms.ElementAt(i);
+                DungeonRoom Room2 = Rooms.ElementAt(i + 1);
+                if (randInt.Next(0,1)==0)
+                {
+                    PlaceHorizontal(cRoom.RoomX + (cRoom.RoomWidth / 2), Room2.RoomX + (Room2.RoomWidth / 2), cRoom.RoomY + (cRoom.RoomHeight / 2));
+                    PlaceVertical(cRoom.RoomY + (cRoom.RoomHeight / 2), Room2.RoomY + (Room2.RoomHeight / 2), Room2.RoomX + (Room2.RoomWidth / 2));
+                }else
+                {
+                    PlaceVertical(cRoom.RoomY + (cRoom.RoomHeight / 2), Room2.RoomY + (Room2.RoomHeight / 2), cRoom.RoomX + (cRoom.RoomWidth / 2));
+                    PlaceHorizontal(cRoom.RoomX + (cRoom.RoomWidth / 2), Room2.RoomX + (Room2.RoomWidth / 2), Room2.RoomY + (Room2.RoomHeight / 2));
+                }
+            }
+            
+        }
+
+        private void BuildWalls()
+        {
+            for(int i=1;i<DungeonHeight-1;i++) //y
+            {
+                for(int j=1;j<DungeonWidth-1;j++) //x
+                {
+                    if(DungeonGrid[j,i] != null && DungeonGrid[j,i].Tag == BniTypes.Tag.Floor)
+                    {
+                        //loop through all adjacent locations
+                        for(int k=-1;k<2;k++) //y
+                        {
+                            for(int l=-1;l<2;l++) //x
+                            {
+                                if(DungeonGrid[j+l,i+k] == null)
+                                {
+                                    Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Wall]);
+                                    //set position and add to dungeon grid
+                                    PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
+                                    posEnt.X = (j+l) * Globals.TILE_WIDTH;
+                                    posEnt.Y = (i+k) * Globals.TILE_HEIGHT;
+                                    tempEnt.Tag = BniTypes.Tag.Wall;
+                                    DungeonGrid[j+l, i+k] = tempEnt;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        private Entity GetEmptyTile(Texture2D tex)
+        {
+            Entity tempEnt = new Entity();
+            PositionVector posEnt = new PositionVector();
+            Render rendEnt = new Render(tex);
+            tempEnt.AddComponent(posEnt);
+            tempEnt.AddComponent(rendEnt);
+            return tempEnt;
         }
 
         public class DungeonRoom
@@ -89,6 +214,7 @@ namespace UntitledDungeonGame.Resources.Game
             /// The tiles in the room. This is things like the floor/walls. does not include entities on ground or enemies.
             /// </summary>
             public Tile[,] RoomTiles;
+            public Entity[,] RoomEntities;
             public int RoomX;
             public int RoomY;
             public int RoomWidth;
@@ -102,6 +228,7 @@ namespace UntitledDungeonGame.Resources.Game
                 RoomWidth = roomWidth;
                 RoomHeight = roomHeight;
                 BuildRoom();
+                BuildEntities();
             }
 
             private void BuildRoom()
@@ -115,7 +242,7 @@ namespace UntitledDungeonGame.Resources.Game
                 }
             }
 
-            public Entity[,] GetEntities()
+            public void BuildEntities()
             {
                 Entity[,] entities = new Entity[RoomWidth, RoomHeight];
                 for (int i = 0; i < RoomWidth; i++)
@@ -123,17 +250,29 @@ namespace UntitledDungeonGame.Resources.Game
                     for (int j = 0; j < RoomHeight; j++)
                     {
 
-                        Entity Tile = new Entity();
+                        Entity TileEnt = new Entity();
                         Render entRender = new Render(Globals.Textures[RoomTiles[i,j]]);
                         PositionVector entPositionVector = new PositionVector();
                         entPositionVector.X = (RoomX * Globals.TILE_WIDTH) + (i * Globals.TILE_WIDTH); //convert to global position
                         entPositionVector.Y = (RoomY * Globals.TILE_HEIGHT) + (j * Globals.TILE_HEIGHT); //convert to global position
-                        Tile.AddComponent(entPositionVector);
-                        Tile.AddComponent(entRender);
-                        entities[i,j] = Tile;
+                        TileEnt.AddComponent(entPositionVector);
+                        TileEnt.AddComponent(entRender);
+                        switch(RoomTiles[i,j])
+                        {
+                            case Tile.Wall:
+                                TileEnt.Tag = BniTypes.Tag.Wall;
+                                break;
+                            case Tile.Floor:
+                                TileEnt.Tag = BniTypes.Tag.Floor;
+                                break;
+                            default:
+                                TileEnt.Tag = BniTypes.Tag.Air;
+                                break;
+                        }
+                        entities[i,j] = TileEnt;
                     }
                 }
-                return entities;
+                RoomEntities = entities;
             }
 
         }

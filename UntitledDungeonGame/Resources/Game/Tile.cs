@@ -10,6 +10,6 @@ namespace UntitledDungeonGame.Resources.Game
     {
         Floor,
         Wall,
-        Doorway
+        Air,
     }
 }
