@@ -181,6 +181,8 @@ namespace UntitledDungeonGame
                         }
                     }
                 }
+                Camera.Position = new Vector2((MainDungeon.DungeonWidth / 2) * Globals.TILE_WIDTH, (MainDungeon.DungeonHeight / 2) * Globals.TILE_HEIGHT);
+                Camera.Zoom = 0.15f;
 
                 MainGameScene.AddEntity(CameraDude);
             });
