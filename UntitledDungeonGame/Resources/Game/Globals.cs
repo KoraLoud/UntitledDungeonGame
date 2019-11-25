@@ -9,8 +9,12 @@ namespace UntitledDungeonGame.Resources.Game
 {
     public static class Globals
     {
-        public static Dictionary<Tile, Texture2D> Textures = new Dictionary<Tile, Texture2D>();
+        //textures
+        public static Dictionary<String, Texture2D> Textures = new Dictionary<String, Texture2D>();
         public static readonly int TILE_HEIGHT = 128;
         public static readonly int TILE_WIDTH = 128;
+        public static readonly int FLOORS_COUNT = 4;
+        public static readonly int WALLS_COUNT = 2;
+
     }
 }

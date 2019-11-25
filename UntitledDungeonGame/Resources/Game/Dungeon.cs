@@ -14,6 +14,7 @@ namespace UntitledDungeonGame.Resources.Game
     {
         public List<DungeonRoom> Rooms;
         public Entity[,] DungeonGrid;
+        public List<Entity> Walls;
 
         public int MaxRooms;
         public int RoomMinSize;
@@ -25,6 +26,7 @@ namespace UntitledDungeonGame.Resources.Game
         public Dungeon(int maxRooms, int roomMinSize, int roomMaxSize, int dungeonWidth, int dungeonHeight)
         {
             Rooms = new List<DungeonRoom>();
+            Walls = new List<Entity>();
             MaxRooms = maxRooms;
             RoomMinSize = roomMinSize;
             RoomMaxSize = roomMaxSize;
@@ -45,8 +47,8 @@ namespace UntitledDungeonGame.Resources.Game
                 int roomWidth = randInt.Next(RoomMinSize, RoomMaxSize);
                 int roomHeight = randInt.Next(RoomMinSize, RoomMaxSize);
 
-                int roomY = randInt.Next(1, DungeonHeight - roomHeight - 1);
-                int roomX = randInt.Next(1, DungeonWidth - roomWidth - 1);
+                int roomY = randInt.Next(2, DungeonHeight - roomHeight - 2);
+                int roomX = randInt.Next(2, DungeonWidth - roomWidth - 2);
 
                 Rectangle roomRect = new Rectangle(roomX, roomY, roomWidth, roomHeight);
                 bool place = true;
@@ -86,13 +88,15 @@ namespace UntitledDungeonGame.Resources.Game
 
         private void PlaceHorizontal(int x1, int x2, int y)
         {
+            Random randTex = new Random();
             if(x1>0 && x1<DungeonWidth && x2>0 && x2<DungeonWidth)
             {
                 if (x1 < x2) //build to the right
                 {
                     for (int i = 0; i < x2 - x1; i++)
                     {
-                        Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Floor]);
+                        int texture = randTex.Next(1, Globals.FLOORS_COUNT + 1);
+                        Entity tempEnt = GetEmptyTile(Globals.Textures["floor" + texture]);
                         PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                         posEnt.X = (x1 + i) * Globals.TILE_WIDTH;
                         posEnt.Y = y * Globals.TILE_HEIGHT;
@@ -103,7 +107,8 @@ namespace UntitledDungeonGame.Resources.Game
                 {
                     for(int i=x1;i>x2;i--)
                     {
-                        Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Floor]);
+                        int texture = randTex.Next(1, Globals.FLOORS_COUNT + 1);
+                        Entity tempEnt = GetEmptyTile(Globals.Textures["floor" + texture]);
                         PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                         posEnt.X = i * Globals.TILE_WIDTH;
                         posEnt.Y = y * Globals.TILE_HEIGHT;
@@ -116,13 +121,15 @@ namespace UntitledDungeonGame.Resources.Game
 
         public void PlaceVertical(int y1, int y2, int x)
         {
+            Random randTex = new Random();
             if (y1 > 0 && y1 < DungeonHeight && y2 > 0 && y2 < DungeonHeight)
             {
                 if (y1 < y2) //build up
                 {
                     for (int i = 0; i < y2 - y1; i++)
                     {
-                        Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Floor]);
+                        int texture = randTex.Next(1, Globals.FLOORS_COUNT + 1);
+                        Entity tempEnt = GetEmptyTile(Globals.Textures["floor" + texture]);
                         PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                         posEnt.X = x * Globals.TILE_WIDTH;
                         posEnt.Y = (y1+i) * Globals.TILE_HEIGHT;
@@ -134,7 +141,8 @@ namespace UntitledDungeonGame.Resources.Game
                 {
                     for (int i = y1; i > y2; i--)
                     {
-                        Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Floor]);
+                        int texture = randTex.Next(1, Globals.FLOORS_COUNT + 1);
+                        Entity tempEnt = GetEmptyTile(Globals.Textures["floor" + texture]);
                         PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                         posEnt.X = x * Globals.TILE_WIDTH;
                         posEnt.Y = i * Globals.TILE_HEIGHT;
@@ -169,6 +177,7 @@ namespace UntitledDungeonGame.Resources.Game
 
         private void BuildWalls()
         {
+            Random randIntGen = new Random();
             for(int i=1;i<DungeonHeight-1;i++) //y
             {
                 for(int j=1;j<DungeonWidth-1;j++) //x
@@ -182,7 +191,41 @@ namespace UntitledDungeonGame.Resources.Game
                             {
                                 if(DungeonGrid[j+l,i+k] == null)
                                 {
-                                    Entity tempEnt = GetEmptyTile(Globals.Textures[Tile.Wall]);
+                                    bool IsTopWall = true;
+                                    Entity tempEnt = GetEmptyTile(Globals.Textures["floor1"]);
+                                    Render tempEntRender = tempEnt.GetComponent<Render>();
+                                    
+                                    for(int ia=0;ia<i+k;ia++)
+                                    {
+                                        if(DungeonGrid[j+l,(i+k)-ia] != null)
+                                        {
+                                            IsTopWall = false;
+                                        }
+                                    }
+                                    if(IsTopWall)
+                                    {
+
+                                        if(DungeonGrid[(j + l) + 1, i + k] != null && DungeonGrid[(j + l) + 1, i + k].Tag == BniTypes.Tag.Floor) //get tile to the right
+                                        {
+                                            tempEntRender.Texture = Globals.Textures["wall_right"];
+                                        }
+                                        else if(DungeonGrid[(j + l) - 1, i + k] != null)
+                                        {
+                                            tempEntRender.Texture = Globals.Textures["wall_left"];
+                                        }
+                                        else
+                                        {
+                                            if ((j + l) % 2 == 0)
+                                            {
+                                                tempEntRender.Texture = Globals.Textures["wall1"];
+                                            }
+                                            else
+                                            {
+                                                tempEntRender.Texture = Globals.Textures["wall2"];
+                                            }
+                                        }
+                                    }
+
                                     //set position and add to dungeon grid
                                     PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                                     posEnt.X = (j+l) * Globals.TILE_WIDTH;
@@ -245,13 +288,23 @@ namespace UntitledDungeonGame.Resources.Game
             public void BuildEntities()
             {
                 Entity[,] entities = new Entity[RoomWidth, RoomHeight];
+                Random randTex = new Random();
                 for (int i = 0; i < RoomWidth; i++)
                 {
                     for (int j = 0; j < RoomHeight; j++)
                     {
 
                         Entity TileEnt = new Entity();
-                        Render entRender = new Render(Globals.Textures[RoomTiles[i,j]]);
+                        Render entRender = new Render(Globals.Textures["floor1"]);
+                        switch(RoomTiles[i,j])
+                        {
+                            case Tile.Floor:
+                                {
+                                    int texture = randTex.Next(1, Globals.FLOORS_COUNT+1);
+                                    entRender.Texture = Globals.Textures["floor" + texture];
+                                }
+                                break;
+                        }
                         PositionVector entPositionVector = new PositionVector();
                         entPositionVector.X = (RoomX * Globals.TILE_WIDTH) + (i * Globals.TILE_WIDTH); //convert to global position
                         entPositionVector.Y = (RoomY * Globals.TILE_HEIGHT) + (j * Globals.TILE_HEIGHT); //convert to global position

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UntitledDungeonGame.Resources;
 using UntitledDungeonGame.Resources.Game;
 using UntitledDungeonGame.Resources.MainMenu;
@@ -127,10 +128,20 @@ namespace UntitledDungeonGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //load stuff
-            Texture2D stoneTexture = Content.Load<Texture2D>("Stone");
-            Globals.Textures.Add(Tile.Floor, stoneTexture);
-            Globals.Textures.Add(Tile.Wall, stoneTexture);
+            //load tiles
+            DirectoryInfo dir = new DirectoryInfo(Content.RootDirectory + "/Tiles");
+            if(dir.Exists)
+            {
+                FileInfo[] files = dir.GetFiles();
+                foreach(FileInfo file in files)
+                {
+                    string fileName = file.Name.Split('.')[0];
+                    Globals.Textures.Add(fileName, Content.Load<Texture2D>("Tiles/"+fileName));
+                }
+            }
+
+            Console.WriteLine(Globals.Textures.ToString());
+            
 
 
             //main menu
@@ -157,7 +168,7 @@ namespace UntitledDungeonGame
 
             MainGameScene.SetOnLoad(() =>
             {
-                BackgroundColor = Color.Black;
+                BackgroundColor = new Color(32,32,32);
                 //generate dungeon
                 MainDungeon = new Dungeon(15, 3, 6,25, 25);
 
@@ -168,15 +179,6 @@ namespace UntitledDungeonGame
                     {
                         if(MainDungeon.DungeonGrid[i,j] != null)
                         {
-                            switch(MainDungeon.DungeonGrid[i,j].Tag)
-                            {
-                                case BniTypes.Tag.Wall:
-                                    MainDungeon.DungeonGrid[i, j].GetComponent<Render>().Color = Color.Red;
-                                    break;
-                                default:
-                                    MainDungeon.DungeonGrid[i, j].GetComponent<Render>().Color = Color.White;
-                                    break;
-                            }
                             MainGameScene.AddEntity(MainDungeon.DungeonGrid[i, j]);
                         }
                     }
