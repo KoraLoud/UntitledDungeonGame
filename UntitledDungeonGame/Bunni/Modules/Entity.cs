@@ -52,6 +52,23 @@ namespace Bunni.Resources.Modules
         }
 
         /// <summary>
+        /// Returns if an entity has a given component or not
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool HasComponent<T>() where T : Component
+        {
+            foreach(var c in Components)
+            {
+                if(c is T)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Fired before Update
         /// </summary>
         /// <param name="gameTime"></param>

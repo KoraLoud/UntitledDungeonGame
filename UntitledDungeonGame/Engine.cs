@@ -177,11 +177,15 @@ namespace UntitledDungeonGame
                 {
                     for(int j=0;j<MainDungeon.DungeonHeight;j++)
                     {
-                        if(MainDungeon.DungeonGrid[i,j] != null)
+                        if(MainDungeon.DungeonEntityGrid[i,j] != null)
                         {
-                            MainGameScene.AddEntity(MainDungeon.DungeonGrid[i, j]);
+                            MainGameScene.AddEntity(MainDungeon.DungeonEntityGrid[i, j]);
                         }
                     }
+                }
+                foreach(Entity wall in MainDungeon.Walls)
+                {
+                    MainGameScene.AddEntity(wall);
                 }
                 Camera.Position = new Vector2((MainDungeon.DungeonWidth / 2) * Globals.TILE_WIDTH, (MainDungeon.DungeonHeight / 2) * Globals.TILE_HEIGHT);
                 Camera.Zoom = 0.15f;
