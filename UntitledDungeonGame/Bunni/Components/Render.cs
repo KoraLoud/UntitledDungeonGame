@@ -16,6 +16,8 @@ namespace Bunni.Resources.Components
         public Color Color { get; set; }
         public Rectangle RenderRectangle { get; set; }
         public bool Visible { get; set; } = true;
+        public int ZLayer { get; set; } = 1;
+
         private PositionVector Position { get; set; }
 
         public Render(Texture2D texture)
