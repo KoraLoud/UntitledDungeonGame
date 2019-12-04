@@ -13,7 +13,6 @@ namespace Bunni.Resources.Modules
     {
         public List<Entity> SceneEntities = new List<Entity>();
 
-        private bool Sort = false;
         private Action onLoad;
 
         public void SetOnLoad(Action callback)
@@ -33,7 +32,7 @@ namespace Bunni.Resources.Modules
         public void AddEntity(Entity entity)
         {
             SceneEntities.Add(entity);
-            Sort = true;
+            SortEntities();
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace Bunni.Resources.Modules
 
         public virtual void Update(GameTime gameTime)
         {
-            foreach(var e in SceneEntities)
+            foreach (var e in SceneEntities)
             {
                 e.Update(gameTime, this);
             }
@@ -72,14 +71,15 @@ namespace Bunni.Resources.Modules
 
         private static int SortByZ(Entity x, Entity y)
         {
-            if(x.HasComponent<Render>() && y.HasComponent<Render>())
+            if (x.HasComponent<Render>() && y.HasComponent<Render>())
             {
                 Render xComponent = x.GetComponent<Render>();
                 Render yComponent = y.GetComponent<Render>();
-                if(xComponent.ZLayer > yComponent.ZLayer)
+                if (xComponent.ZLayer > yComponent.ZLayer)
                 {
                     return -1;
-                }else if(xComponent.ZLayer < yComponent.ZLayer)
+                }
+                else if (xComponent.ZLayer < yComponent.ZLayer)
                 {
                     return 1;
                 }
@@ -94,13 +94,14 @@ namespace Bunni.Resources.Modules
             }
         }
 
+        private void SortEntities()
+        {
+            SceneEntities.Sort(SortByZ);
+        }
+
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if(Sort)
-            {
-                SceneEntities.Sort(SortByZ);
-            }
-            foreach(var e in SceneEntities)
+            foreach (var e in SceneEntities)
             {
                 e.Draw(gameTime, spriteBatch);
             }
