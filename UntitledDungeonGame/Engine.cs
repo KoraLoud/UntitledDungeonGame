@@ -28,6 +28,8 @@ namespace UntitledDungeonGame
         private int FpsCounter = 0;
         private int MilisecondsElapsed = 0;
 
+        private bool Debugging = false;
+
         public Color BackgroundColor = Color.DarkSlateGray;
 
         public Scene MainMenuScene;
@@ -114,6 +116,17 @@ namespace UntitledDungeonGame
                 }
             });
 
+            cameraDudeInput.BindKey(Keys.LeftControl, (pressed, held) =>
+            {
+                if (pressed || held)
+                {
+                    Debugging = true;
+                } else
+                {
+                    Debugging = false;
+                }
+            });
+
             CameraDude.AddComponent(cameraDudeInput);
 
 
@@ -170,10 +183,11 @@ namespace UntitledDungeonGame
             {
                 BackgroundColor = new Color(32,32,32);
                 //generate dungeon
-                MainDungeon = new Dungeon(15, 3, 6,25, 25);
+                //MainDungeon = new Dungeon(40, 6, 12, 50, 50);
+                MainDungeon = new Dungeon(15, 3, 6, 25, 25);
 
                 //add dungeon grid to scene entities
-                for(int i=0;i<MainDungeon.DungeonWidth;i++)
+                for (int i=0;i<MainDungeon.DungeonWidth;i++)
                 {
                     for(int j=0;j<MainDungeon.DungeonHeight;j++)
                     {
@@ -240,6 +254,30 @@ namespace UntitledDungeonGame
                 MilisecondsElapsed = 0;
             }
             Window.Title = Title + " - FPS: " + FPS; */
+
+            foreach (Entity tile in SceneManager.CurrentScene.SceneEntities)
+            {
+                if(tile.HasComponent<Render>())
+                {
+                    tile.GetComponent<Render>().Color = Color.White;
+                }
+            }
+
+            foreach (Entity tile in SceneManager.CurrentScene.SceneEntities)
+            {
+                if (tile.HasComponent<Render>() && Debugging)
+                {
+                    if (tile.Tag == BniTypes.Tag.Wall)
+                    {
+                        tile.GetComponent<Render>().Color = Color.Purple;
+                    }
+                    else if (tile.Tag == BniTypes.Tag.Floor)
+                    {
+                        tile.GetComponent<Render>().Color = Color.Green;
+                    }
+                }
+            }
+
             base.Update(gameTime);
         }
 
