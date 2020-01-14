@@ -47,7 +47,7 @@ namespace Bunni.Resources.Modules
 
         public virtual void PreUpdate(GameTime gameTime)
         {
-            foreach (var e in SceneEntities)
+            foreach (Entity e in SceneEntities.ToList())
             {
                 e.PreUpdate(gameTime, this);
             }
@@ -55,7 +55,7 @@ namespace Bunni.Resources.Modules
 
         public virtual void Update(GameTime gameTime)
         {
-            foreach (var e in SceneEntities)
+            foreach (Entity e in SceneEntities.ToList())
             {
                 e.Update(gameTime, this);
             }
@@ -63,7 +63,7 @@ namespace Bunni.Resources.Modules
 
         public virtual void PostUpdate(GameTime gameTime)
         {
-            foreach (var e in SceneEntities)
+            foreach (Entity e in SceneEntities.ToList())
             {
                 e.PostUpdate(gameTime, this);
             }

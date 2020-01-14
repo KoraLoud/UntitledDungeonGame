@@ -11,5 +11,7 @@ namespace UntitledDungeonGame.Resources.Game
         Floor,
         Wall,
         Air,
+        Entrance,
+        Exit
     }
 }

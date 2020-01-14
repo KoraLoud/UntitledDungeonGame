@@ -44,7 +44,8 @@ namespace UntitledDungeonGame
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Camera.Init(new Vector2(400, 240), graphics, 800, 480);
-            Camera.UpdateWindow(800, 480);
+            //Camera.UpdateWindow(800, 480);
+            Camera.UpdateWindow(1600, 900);
             Camera.Zoom = 0.8f;
 
             IsMouseVisible = true;
@@ -127,9 +128,20 @@ namespace UntitledDungeonGame
                 }
             });
 
+            cameraDudeInput.BindKey(Keys.Space, (pressed, held) =>
+            {
+                if (pressed)
+                {
+                    MainGameScene.SceneEntities.RemoveAll((e) =>
+                    {
+                        return true;
+                    });
+
+                    SceneManager.ChangeScene(MainGameScene);
+                }
+            });
+
             CameraDude.AddComponent(cameraDudeInput);
-
-
             base.Initialize();
         }
 
@@ -267,13 +279,21 @@ namespace UntitledDungeonGame
             {
                 if (tile.HasComponent<Render>() && Debugging)
                 {
-                    if (tile.Tag == BniTypes.Tag.Wall)
+                    if (tile.TileType == Tile.Wall)
                     {
                         tile.GetComponent<Render>().Color = Color.Purple;
                     }
-                    else if (tile.Tag == BniTypes.Tag.Floor)
+                    else if (tile.TileType == Tile.Floor)
                     {
                         tile.GetComponent<Render>().Color = Color.Green;
+                    }
+                    else if (tile.TileType == Tile.Entrance)
+                    {
+                        tile.GetComponent<Render>().Color = Color.Yellow;
+                    }
+                    else if (tile.TileType == Tile.Exit)
+                    {
+                        tile.GetComponent<Render>().Color = Color.Red;
                     }
                 }
             }
@@ -297,7 +317,7 @@ namespace UntitledDungeonGame
                 FpsCounter = 0;
                 MilisecondsElapsed = 0;
             }
-            Window.Title = Title + " - FPS: " + FPS;
+            Window.Title = Title + " - FPS: " + FPS + " - " + SceneManager.CurrentScene.SceneEntities.Count + " entities in scene";
 
             //UI spritebatch
             spriteBatch.Begin();

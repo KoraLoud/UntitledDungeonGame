@@ -25,6 +25,8 @@ namespace UntitledDungeonGame.Resources.Game
 
         public int DungeonWidth;
         public int DungeonHeight;
+        /*public Vector2 DungeonSpawn;
+        public Vector2 DungeonEnd;*/
 
         public Dungeon(int maxRooms, int roomMinSize, int roomMaxSize, int dungeonWidth, int dungeonHeight)
         {
@@ -52,22 +54,10 @@ namespace UntitledDungeonGame.Resources.Game
 
         public void AddTile(int x, int y, Entity e)
         {
-            DungeonTileGrid[x, y] = GetEntityTag(e);
+            DungeonTileGrid[x, y] = e.TileType;
             DungeonEntityGrid[x, y] = e;
         }
 
-        public Tile GetEntityTag(Entity e)
-        {
-            switch(e.Tag)
-            {
-                case BniTypes.Tag.Wall:
-                    return Tile.Wall;
-                case BniTypes.Tag.Floor:
-                    return Tile.Floor;
-                default:
-                    return Tile.Air;
-            }
-        }
 
         private void BuildDungeon()
         {
@@ -101,6 +91,38 @@ namespace UntitledDungeonGame.Resources.Game
             RoomsToDungeonGrid(); //write rooms into grid
             BuildHallways();
             BuildWalls();
+            GenerateFeatures();
+        }
+
+        private void GenerateFeatures()
+        {
+            //create spawn
+            Random randRoom = new Random();
+            int StartRoomNumber = randRoom.Next(Rooms.Count);
+            DungeonRoom SpawnRoom = Rooms.ElementAt(StartRoomNumber);
+            int x = randRoom.Next(1, SpawnRoom.RoomWidth);
+            int y = randRoom.Next(1, SpawnRoom.RoomHeight);
+            //DungeonSpawn = new Vector2(SpawnRoom.RoomX * x, SpawnRoom.RoomY * y);
+            //SpawnRoom.RoomTiles[x, y] = Tile.Entrance;
+            DungeonTileGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y] = Tile.Entrance;
+            DungeonEntityGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y].TileType = Tile.Entrance;
+
+            //create exit
+            int EndRoomNumber = randRoom.Next(Rooms.Count);
+            if(EndRoomNumber==StartRoomNumber)
+            {
+                EndRoomNumber++;
+                EndRoomNumber %= Rooms.Count;
+            }
+            DungeonRoom EndRoom = Rooms.ElementAt(EndRoomNumber);
+            int ex = randRoom.Next(1, EndRoom.RoomWidth);
+            int ey = randRoom.Next(1, EndRoom.RoomHeight);
+            //DungeonEnd = new Vector2(EndRoom.RoomX * ex, EndRoom.RoomY * ey);
+            DungeonTileGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey] = Tile.Exit;
+            DungeonEntityGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey].TileType = Tile.Exit;
+
+            //create items
+            //create enemies
         }
 
         private void RoomsToDungeonGrid()
@@ -132,7 +154,7 @@ namespace UntitledDungeonGame.Resources.Game
                         PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                         posEnt.X = (x1 + i) * Globals.TILE_WIDTH;
                         posEnt.Y = y * Globals.TILE_HEIGHT;
-                        tempEnt.Tag = BniTypes.Tag.Floor;
+                        tempEnt.TileType = Tile.Floor;
                         AddTile(x1 + i, y, tempEnt);
                     }
                 }else if(x1 > x2) //build to the left
@@ -144,7 +166,7 @@ namespace UntitledDungeonGame.Resources.Game
                         PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                         posEnt.X = i * Globals.TILE_WIDTH;
                         posEnt.Y = y * Globals.TILE_HEIGHT;
-                        tempEnt.Tag = BniTypes.Tag.Floor;
+                        tempEnt.TileType = Tile.Floor;
                         AddTile(i, y, tempEnt);
                     }
                 }
@@ -165,7 +187,7 @@ namespace UntitledDungeonGame.Resources.Game
                         PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                         posEnt.X = x * Globals.TILE_WIDTH;
                         posEnt.Y = (y1+i) * Globals.TILE_HEIGHT;
-                        tempEnt.Tag = BniTypes.Tag.Floor;
+                        tempEnt.TileType = Tile.Floor;
                         AddTile(x, y1 + i, tempEnt);
                     }
                 }
@@ -178,7 +200,7 @@ namespace UntitledDungeonGame.Resources.Game
                         PositionVector posEnt = tempEnt.GetComponent<PositionVector>();
                         posEnt.X = x * Globals.TILE_WIDTH;
                         posEnt.Y = i * Globals.TILE_HEIGHT;
-                        tempEnt.Tag = BniTypes.Tag.Floor;
+                        tempEnt.TileType = Tile.Floor;
                         AddTile(x, i, tempEnt);
                     }
                 }
@@ -281,7 +303,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
 
@@ -291,7 +313,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
 
@@ -303,7 +325,7 @@ namespace UntitledDungeonGame.Resources.Game
                                     PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                     tempPos.X = j * Globals.TILE_WIDTH;
                                     tempPos.Y = i * Globals.TILE_HEIGHT;
-                                    tempEnt.Tag = BniTypes.Tag.Wall;
+                                    tempEnt.TileType = DungeonTileGrid[j, i];
                                     Walls.Add(tempEnt);
                                     continue;
                                 }
@@ -313,7 +335,7 @@ namespace UntitledDungeonGame.Resources.Game
                                     PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                     tempPos.X = j * Globals.TILE_WIDTH;
                                     tempPos.Y = i * Globals.TILE_HEIGHT;
-                                    tempEnt.Tag = BniTypes.Tag.Wall;
+                                    tempEnt.TileType = DungeonTileGrid[j, i];
                                     Walls.Add(tempEnt);
                                     continue;
 
@@ -324,7 +346,7 @@ namespace UntitledDungeonGame.Resources.Game
                                     PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                     tempPos.X = j * Globals.TILE_WIDTH;
                                     tempPos.Y = i * Globals.TILE_HEIGHT;
-                                    tempEnt.Tag = BniTypes.Tag.Wall;
+                                    tempEnt.TileType = DungeonTileGrid[j, i];
                                     Walls.Add(tempEnt);
                                     continue;
                                 }
@@ -334,7 +356,7 @@ namespace UntitledDungeonGame.Resources.Game
                                     PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                     tempPos.X = j * Globals.TILE_WIDTH;
                                     tempPos.Y = i * Globals.TILE_HEIGHT;
-                                    tempEnt.Tag = BniTypes.Tag.Wall;
+                                    tempEnt.TileType = DungeonTileGrid[j, i];
                                     Walls.Add(tempEnt);
                                     continue;
                                 }
@@ -349,7 +371,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
                             else if (DungeonTileGrid[j, i - 1] == Tile.Floor && DungeonTileGrid[j, i + 1] == Tile.Wall)
@@ -358,7 +380,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
                             else if (DungeonTileGrid[j, i - 1] == Tile.Floor && DungeonTileGrid[j, i + 1] == Tile.Floor)
@@ -367,7 +389,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
                             else if (DungeonTileGrid[j, i - 1] == Tile.Wall && DungeonTileGrid[j, i + 1] == Tile.Floor)
@@ -376,7 +398,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
                         }
@@ -390,7 +412,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
                             else if (DungeonTileGrid[j, i - 1] == Tile.Floor && DungeonTileGrid[j, i + 1] == Tile.Wall)
@@ -399,7 +421,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
                             else if (DungeonTileGrid[j, i - 1] == Tile.Floor && DungeonTileGrid[j, i + 1] == Tile.Floor)
@@ -408,7 +430,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
                             else if (DungeonTileGrid[j, i - 1] == Tile.Wall && DungeonTileGrid[j, i + 1] == Tile.Floor)
@@ -417,7 +439,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 Walls.Add(tempEnt);
                             }
                         }
@@ -431,7 +453,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
@@ -441,7 +463,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
@@ -451,7 +473,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
@@ -461,7 +483,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
@@ -476,7 +498,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
@@ -486,7 +508,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
@@ -496,7 +518,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
@@ -506,7 +528,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                                 tempPos.X = j * Globals.TILE_WIDTH;
                                 tempPos.Y = i * Globals.TILE_HEIGHT;
-                                tempEnt.Tag = BniTypes.Tag.Wall;
+                                tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
@@ -519,7 +541,7 @@ namespace UntitledDungeonGame.Resources.Game
                             PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                             tempPos.X = j * Globals.TILE_WIDTH;
                             tempPos.Y = i * Globals.TILE_HEIGHT;
-                            tempEnt.Tag = BniTypes.Tag.Wall;
+                            tempEnt.TileType = DungeonTileGrid[j, i];
                             tempEnt.GetComponent<Render>().ZLayer = -1;
                             Walls.Add(tempEnt);
                         }
@@ -529,7 +551,7 @@ namespace UntitledDungeonGame.Resources.Game
                             PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
                             tempPos.X = j * Globals.TILE_WIDTH;
                             tempPos.Y = i * Globals.TILE_HEIGHT;
-                            tempEnt.Tag = BniTypes.Tag.Wall;
+                            tempEnt.TileType = DungeonTileGrid[j, i];
                             tempEnt.GetComponent<Render>().ZLayer = -1;
                             Walls.Add(tempEnt);
                         }
@@ -607,7 +629,7 @@ namespace UntitledDungeonGame.Resources.Game
                         entPositionVector.Y = (RoomY * Globals.TILE_HEIGHT) + (j * Globals.TILE_HEIGHT); //convert to global position
                         TileEnt.AddComponent(entPositionVector);
                         TileEnt.AddComponent(entRender);
-                        TileEnt.Tag = BniTypes.Tag.Floor;
+                        TileEnt.TileType = RoomTiles[i, j];
                         entities[i,j] = TileEnt;
                     }
                 }
