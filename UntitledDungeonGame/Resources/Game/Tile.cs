@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Bunni.Resources.Components;
+using Bunni.Resources.Modules;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +9,17 @@ using System.Threading.Tasks;
 
 namespace UntitledDungeonGame.Resources.Game
 {
-    public enum Tile
+    class Tile : Entity
     {
-        Floor,
-        Wall,
-        Air,
-        Entrance,
-        Exit
+        public string TileVersion { get; set; }
+
+        public Tile(Texture2D tex)
+        {
+            PositionVector posEnt = new PositionVector();
+            Render rendEnt = new Render(tex);
+            AddComponent(posEnt);
+            AddComponent(rendEnt);
+        }
+
     }
 }
