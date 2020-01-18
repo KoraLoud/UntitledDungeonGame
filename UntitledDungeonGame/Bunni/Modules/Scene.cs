@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UntitledDungeonGame.Resources.Game;
 
 namespace Bunni.Resources.Modules
 {
@@ -32,6 +33,18 @@ namespace Bunni.Resources.Modules
         public void AddEntity(Entity entity)
         {
             SceneEntities.Add(entity);
+            SortEntities();
+        }
+
+        public void AddEntity(List<Entity> entities)
+        {
+            SceneEntities.AddRange(entities);
+            SortEntities();
+        }
+
+        public void AddEntity(List<Tile> tiles)
+        {
+            SceneEntities.AddRange(tiles);
             SortEntities();
         }
 

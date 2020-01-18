@@ -15,7 +15,7 @@ namespace UntitledDungeonGame.Resources.Game
     public class Dungeon
     {
         public List<DungeonRoom> Rooms;
-        public Entity[,] DungeonEntityGrid;
+        public List<Tile>[,] DungeonEntityGrid;
         public DTypes.TileType[,] DungeonTileGrid;
         public List<Entity> Walls;
 
@@ -38,24 +38,24 @@ namespace UntitledDungeonGame.Resources.Game
             DungeonWidth = dungeonWidth;
             DungeonHeight = dungeonHeight;
             DungeonTileGrid = new DTypes.TileType[dungeonWidth, dungeonHeight];
+            DungeonEntityGrid = new List<Tile>[dungeonWidth, dungeonHeight];
 
             for (int i = 0; i < DungeonTileGrid.GetUpperBound(0) + 1; i++)
             {
                 for (int j = 0; j < DungeonTileGrid.GetUpperBound(1) + 1; j++)
                 {
                     DungeonTileGrid[i, j] = DTypes.TileType.Air;
+                    DungeonEntityGrid[i, j] = new List<Tile>();
                 }
             }
-
-            DungeonEntityGrid = new Entity[dungeonWidth, dungeonHeight];
             BuildDungeon();
 
         }
 
-        public void AddTile(int x, int y, Entity e)
+        public void AddTile(int x, int y, Tile e)
         {
             DungeonTileGrid[x, y] = e.TileType;
-            DungeonEntityGrid[x, y] = e;
+            DungeonEntityGrid[x, y].Add(e);
         }
 
 
@@ -105,7 +105,7 @@ namespace UntitledDungeonGame.Resources.Game
             //DungeonSpawn = new Vector2(SpawnRoom.RoomX * x, SpawnRoom.RoomY * y);
             //SpawnRoom.RoomTiles[x, y] = Tile.Entrance;
             DungeonTileGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y] = DTypes.TileType.Entrance;
-            DungeonEntityGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y].TileType = DTypes.TileType.Entrance;
+            DungeonEntityGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y].ElementAt(0).TileType = DTypes.TileType.Entrance;
 
             //create exit
             int EndRoomNumber = randRoom.Next(Rooms.Count);
@@ -119,7 +119,7 @@ namespace UntitledDungeonGame.Resources.Game
             int ey = randRoom.Next(1, EndRoom.RoomHeight);
             //DungeonEnd = new Vector2(EndRoom.RoomX * ex, EndRoom.RoomY * ey);
             DungeonTileGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey] = DTypes.TileType.Exit;
-            DungeonEntityGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey].TileType = DTypes.TileType.Exit;
+            DungeonEntityGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey].ElementAt(0).TileType = DTypes.TileType.Exit;
 
             //create items
             //create enemies
@@ -588,7 +588,7 @@ namespace UntitledDungeonGame.Resources.Game
             /// The tiles in the room. This is things like the floor/walls. does not include entities on ground or enemies.
             /// </summary>
             public DTypes.TileType[,] RoomTiles;
-            public Entity[,] RoomEntities;
+            public Tile[,] RoomEntities;
             public int RoomX;
             public int RoomY;
             public int RoomWidth;
@@ -618,16 +618,15 @@ namespace UntitledDungeonGame.Resources.Game
 
             public void BuildEntities()
             {
-                Entity[,] entities = new Entity[RoomWidth, RoomHeight];
+                Tile[,] entities = new Tile[RoomWidth, RoomHeight];
                 Random randTex = new Random();
                 for (int i = 0; i < RoomWidth; i++)
                 {
                     for (int j = 0; j < RoomHeight; j++)
                     {
 
-                        Entity TileEnt = new Entity();
-                        Render entRender = new Render(Globals.Textures["floor1"]);
-                        switch(RoomTiles[i,j])
+                        Tile TileEnt = new Tile(Globals.Textures["floor" + randTex.Next(1, Globals.FLOORS_COUNT + 1)]);
+                        /*switch(RoomTiles[i,j])
                         {
                             case DTypes.TileType.Floor:
                                 {
@@ -635,12 +634,10 @@ namespace UntitledDungeonGame.Resources.Game
                                     entRender.Texture = Globals.Textures["floor" + texture];
                                 }
                                 break;
-                        }
-                        PositionVector entPositionVector = new PositionVector();
+                        }*/
+                        PositionVector entPositionVector = TileEnt.GetComponent<PositionVector>();
                         entPositionVector.X = (RoomX * Globals.TILE_WIDTH) + (i * Globals.TILE_WIDTH); //convert to global position
                         entPositionVector.Y = (RoomY * Globals.TILE_HEIGHT) + (j * Globals.TILE_HEIGHT); //convert to global position
-                        TileEnt.AddComponent(entPositionVector);
-                        TileEnt.AddComponent(entRender);
                         TileEnt.TileType = RoomTiles[i, j];
                         entities[i,j] = TileEnt;
                     }

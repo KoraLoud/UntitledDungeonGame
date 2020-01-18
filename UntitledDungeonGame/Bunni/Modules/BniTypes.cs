@@ -23,6 +23,7 @@ namespace Bunni.Resources.Modules
         /// </summary>
         public enum Tag
         {
+            None,
             Player,
             Enemy,
             Floor,
