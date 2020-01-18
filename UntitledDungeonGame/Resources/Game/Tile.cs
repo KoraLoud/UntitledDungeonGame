@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace UntitledDungeonGame.Resources.Game
 {
-    public class Tile : Entity
+    class Tile : Entity
     {
         public DTypes.TileVersions TileVersion { get; set; }
 
