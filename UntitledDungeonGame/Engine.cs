@@ -279,19 +279,19 @@ namespace UntitledDungeonGame
             {
                 if (tile.HasComponent<Render>() && Debugging)
                 {
-                    if (tile.TileType == TileType.Wall)
+                    if (tile.TileType == DTypes.TileType.Wall)
                     {
                         tile.GetComponent<Render>().Color = Color.Purple;
                     }
-                    else if (tile.TileType == TileType.Floor)
+                    else if (tile.TileType == DTypes.TileType.Floor)
                     {
                         tile.GetComponent<Render>().Color = Color.Green;
                     }
-                    else if (tile.TileType == TileType.Entrance)
+                    else if (tile.TileType == DTypes.TileType.Entrance)
                     {
                         tile.GetComponent<Render>().Color = Color.Yellow;
                     }
-                    else if (tile.TileType == TileType.Exit)
+                    else if (tile.TileType == DTypes.TileType.Exit)
                     {
                         tile.GetComponent<Render>().Color = Color.Red;
                     }

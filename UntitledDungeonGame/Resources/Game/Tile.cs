@@ -11,7 +11,7 @@ namespace UntitledDungeonGame.Resources.Game
 {
     class Tile : Entity
     {
-        public string TileVersion { get; set; }
+        public DTypes.TileVersions TileVersion { get; set; }
 
         public Tile(Texture2D tex)
         {

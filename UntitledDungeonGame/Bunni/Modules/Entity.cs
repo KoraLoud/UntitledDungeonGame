@@ -14,7 +14,7 @@ namespace Bunni.Resources.Modules
         private List<Component> Components = new List<Component>();
         public bool Active { get; set; } = true;
         public BniTypes.Tag Tag { get; set; }
-        public TileType TileType { get; set; }
+        public DTypes.TileType TileType { get; set; }
         
         /// <summary>
         /// Used to add a component to an entity
