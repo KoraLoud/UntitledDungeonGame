@@ -8,7 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
+/*TODO: remake top wall sprites one pixel down and a black pixel at the top for
+            situations when its needed*/
 
 namespace UntitledDungeonGame.Resources.Game
 {
@@ -295,7 +296,7 @@ namespace UntitledDungeonGame.Resources.Game
 
                         if (TopWall)
                         {
-                            if (!IsUpperWall(j, i) && IsUpperWall(j + 1, i) && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j, i + 1] != DTypes.TileType.Air) //top left corners
+                            if (!IsUpperWall(j, i) && IsUpperWall(j + 1, i) && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j, i + 1] != DTypes.TileType.Air && DungeonTileGrid[j, i-1] != DTypes.TileType.Floor) //top left corners
                             {
                                 Tile tempEnt = new Tile(Globals.Textures["outer_topleftcorner"]);
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
@@ -306,7 +307,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 Walls.Add(tempEnt);
                             }
 
-                            if (!IsUpperWall(j, i) && IsUpperWall(j - 1, i) && DungeonTileGrid[j, i + 1] != DTypes.TileType.Air) //top right corners
+                            if (!IsUpperWall(j, i) && IsUpperWall(j - 1, i) && DungeonTileGrid[j, i + 1] != DTypes.TileType.Air && DungeonTileGrid[j,i-1] != DTypes.TileType.Floor) //top right corners
                             {
                                 Tile tempEnt = new Tile(Globals.Textures["outer_toprightcorner"]);
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
@@ -459,7 +460,7 @@ namespace UntitledDungeonGame.Resources.Game
                         //inner top walls
                         if (DungeonTileGrid[j, i - 1] == DTypes.TileType.Floor)
                         {
-                            if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall)
+                            if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j - 1, i + 1] != DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j + 1, i + 1] != DTypes.TileType.Floor)
                             {
                                 Tile tempEnt = new Tile(Globals.Textures["inner_leftright"]);
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
@@ -470,7 +471,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
-                            else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j + 1, i] == DTypes.TileType.Floor)
+                            else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j - 1, i + 1] != DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Floor || DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j - 1, i + 1] != DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j+1, i+1] == DTypes.TileType.Floor)
                             {
                                 Tile tempEnt = new Tile(Globals.Textures["inner_right"]);
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
@@ -481,7 +482,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
-                            else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall)
+                            else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j+1, i+1] != DTypes.TileType.Floor || DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j - 1, i+1] == DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j + 1, i + 1] != DTypes.TileType.Floor)
                             {
                                 Tile tempEnt = new Tile(Globals.Textures["inner_left"]);
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
@@ -492,7 +493,7 @@ namespace UntitledDungeonGame.Resources.Game
                                 tempEnt.GetComponent<Render>().ZLayer = -1;
                                 Walls.Add(tempEnt);
                             }
-                            else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Floor)
+                            else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Floor || DungeonTileGrid[j - 1, i+1] == DTypes.TileType.Floor && DungeonTileGrid[j + 1, i+1] == DTypes.TileType.Floor && DungeonTileGrid[j-1,i] == DTypes.TileType.Wall && DungeonTileGrid[j+1,i] == DTypes.TileType.Wall || DungeonTileGrid[j + 1, i] == DTypes.TileType.Floor && DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j-1,i+1] == DTypes.TileType.Floor)
                             {
                                 Tile tempEnt = new Tile(Globals.Textures["inner_up"]);
                                 PositionVector tempPos = tempEnt.GetComponent<PositionVector>();
