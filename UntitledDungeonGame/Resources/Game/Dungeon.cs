@@ -16,7 +16,7 @@ namespace UntitledDungeonGame.Resources.Game
     public class Dungeon
     {
         public List<DungeonRoom> Rooms;
-        public Entity[,] DungeonEntityGrid;
+        public Tile[,] DungeonEntityGrid;
         public DTypes.TileType[,] DungeonTileGrid;
         public List<Entity> Walls;
 
@@ -48,12 +48,12 @@ namespace UntitledDungeonGame.Resources.Game
                 }
             }
 
-            DungeonEntityGrid = new Entity[dungeonWidth, dungeonHeight];
+            DungeonEntityGrid = new Tile[dungeonWidth, dungeonHeight];
             BuildDungeon();
 
         }
 
-        public void AddTile(int x, int y, Entity e)
+        public void AddTile(int x, int y, Tile e)
         {
             DungeonTileGrid[x, y] = e.TileType;
             DungeonEntityGrid[x, y] = e;
@@ -236,19 +236,6 @@ namespace UntitledDungeonGame.Resources.Game
             return true;
         }
 
-        private bool IsUpper(int x, int y)
-        {
-            if (DungeonTileGrid[x, y] != DTypes.TileType.Wall) return false;
-            /*for (int k = 1; k < Math.Min(y,2); k++)
-            {
-                if (DungeonTileGrid[x, y - k] == Tile.Floor)
-                {
-                    return false;
-                }
-            }*/
-            return true;
-        }
-
         private void BuildWalls()
         {
             Random randIntGen = new Random();
@@ -280,61 +267,64 @@ namespace UntitledDungeonGame.Resources.Game
                 {
                     if (DungeonTileGrid[j, i] == DTypes.TileType.Wall)
                     {
-                        bool TopWall = IsUpper(j, i);
 
-                        if (TopWall)
+                        if (!IsUpperWall(j, i) && IsUpperWall(j + 1, i) && DungeonTileGrid[j, i + 1] != DTypes.TileType.Air && DungeonTileGrid[j, i-1] != DTypes.TileType.Floor) //top left corners
                         {
-                            if (!IsUpperWall(j, i) && IsUpperWall(j + 1, i) && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j, i + 1] != DTypes.TileType.Air && DungeonTileGrid[j, i-1] != DTypes.TileType.Floor) //top left corners
+                            if (DungeonTileGrid[j+1, i-1] != DTypes.TileType.Floor || DungeonTileGrid[j,i-1] != DTypes.TileType.Wall)
                             {
                                 Tile tempEnt = new Tile(Globals.Textures["outer_topleftcorner"], new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
                                 tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.TileVersion = DTypes.TileVersions.Corner;
                                 Walls.Add(tempEnt);
                             }
+                            
+                        }
 
-                            if (!IsUpperWall(j, i) && IsUpperWall(j - 1, i) && DungeonTileGrid[j, i + 1] != DTypes.TileType.Air && DungeonTileGrid[j,i-1] != DTypes.TileType.Floor) //top right corners
+                        if (!IsUpperWall(j, i) && IsUpperWall(j - 1, i) && DungeonTileGrid[j, i + 1] != DTypes.TileType.Air && DungeonTileGrid[j,i-1] != DTypes.TileType.Floor) //top right corners
+                        {
+                            if (DungeonTileGrid[j - 1, i - 1] != DTypes.TileType.Floor || DungeonTileGrid[j, i - 1] != DTypes.TileType.Wall)
                             {
                                 Tile tempEnt = new Tile(Globals.Textures["outer_toprightcorner"], new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
                                 tempEnt.TileType = DungeonTileGrid[j, i];
                                 tempEnt.TileVersion = DTypes.TileVersions.Corner;
                                 Walls.Add(tempEnt);
                             }
+                        }
 
-                            if (IsUpperWall(j, i)) //top walls
+                        if (IsUpperWall(j, i)) //top walls
+                        {
+                            if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall) //walls on both sides
                             {
-                                if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall) //walls on both sides
-                                {
-                                    Tile tempEnt = new Tile(Globals.Textures["topwall" + (j % 2)+"small"], new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
-                                    tempEnt.TileType = DungeonTileGrid[j, i];
-                                    tempEnt.TileVersion = DTypes.TileVersions.TopWall;
-                                    Walls.Add(tempEnt);
-                                    continue;
-                                }
-                                else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j + 1, i] != DTypes.TileType.Wall) //walls only to the left
-                                {
-                                    Tile tempEnt = new Tile(Globals.Textures["topwall_rightsmall"],new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
-                                    tempEnt.TileType = DungeonTileGrid[j, i];
-                                    tempEnt.TileVersion = DTypes.TileVersions.TopWall;
-                                    Walls.Add(tempEnt);
-                                    continue;
+                                Tile tempEnt = new Tile(Globals.Textures["topwall" + (j % 2)+"small"], new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
+                                tempEnt.TileType = DungeonTileGrid[j, i];
+                                tempEnt.TileVersion = DTypes.TileVersions.TopWall;
+                                Walls.Add(tempEnt);
+                                continue;
+                            }
+                            else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j + 1, i] != DTypes.TileType.Wall) //walls only to the left
+                            {
+                                Tile tempEnt = new Tile(Globals.Textures["topwall_rightsmall"],new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
+                                tempEnt.TileType = DungeonTileGrid[j, i];
+                                tempEnt.TileVersion = DTypes.TileVersions.TopWall;
+                                Walls.Add(tempEnt);
+                                continue;
 
-                                }
-                                else if (DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j - 1, i] != DTypes.TileType.Wall) //walls only to the right
-                                {
-                                    Tile tempEnt = new Tile(Globals.Textures["topwall_leftsmall"], new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
-                                    tempEnt.TileType = DungeonTileGrid[j, i];
-                                    tempEnt.TileVersion = DTypes.TileVersions.TopWall;
-                                    Walls.Add(tempEnt);
-                                    continue;
-                                }
-                                else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Floor) // no walls
-                                {
-                                    Tile tempEnt = new Tile(Globals.Textures["topwall_leftrightsmall"], new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
-                                    tempEnt.TileType = DungeonTileGrid[j, i];
-                                    tempEnt.TileVersion = DTypes.TileVersions.TopWall;
-                                    Walls.Add(tempEnt);
-                                    continue;
-                                }
+                            }
+                            else if (DungeonTileGrid[j + 1, i] == DTypes.TileType.Wall && DungeonTileGrid[j - 1, i] != DTypes.TileType.Wall) //walls only to the right
+                            {
+                                Tile tempEnt = new Tile(Globals.Textures["topwall_leftsmall"], new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
+                                tempEnt.TileType = DungeonTileGrid[j, i];
+                                tempEnt.TileVersion = DTypes.TileVersions.TopWall;
+                                Walls.Add(tempEnt);
+                                continue;
+                            }
+                            else if (DungeonTileGrid[j - 1, i] == DTypes.TileType.Floor && DungeonTileGrid[j + 1, i] == DTypes.TileType.Floor) // no walls
+                            {
+                                Tile tempEnt = new Tile(Globals.Textures["topwall_leftrightsmall"], new Vector2(j * Globals.TILE_WIDTH, i * Globals.TILE_HEIGHT));
+                                tempEnt.TileType = DungeonTileGrid[j, i];
+                                tempEnt.TileVersion = DTypes.TileVersions.TopWall;
+                                Walls.Add(tempEnt);
+                                continue;
                             }
                         }
                         //left walls
@@ -505,7 +495,7 @@ namespace UntitledDungeonGame.Resources.Game
             /// The tiles in the room. This is things like the floor/walls. does not include entities on ground or enemies.
             /// </summary>
             public DTypes.TileType[,] RoomTiles;
-            public Entity[,] RoomEntities;
+            public Tile[,] RoomEntities;
             public int RoomX;
             public int RoomY;
             public int RoomWidth;
@@ -535,29 +525,14 @@ namespace UntitledDungeonGame.Resources.Game
 
             public void BuildEntities()
             {
-                Entity[,] entities = new Entity[RoomWidth, RoomHeight];
+                Tile[,] entities = new Tile[RoomWidth, RoomHeight];
                 Random randTex = new Random();
                 for (int i = 0; i < RoomWidth; i++)
                 {
                     for (int j = 0; j < RoomHeight; j++)
                     {
-
-                        Entity TileEnt = new Entity();
-                        Render entRender = new Render(Globals.Textures["floor1"]);
-                        switch(RoomTiles[i,j])
-                        {
-                            case DTypes.TileType.Floor:
-                                {
-                                    int texture = randTex.Next(1, Globals.FLOORS_COUNT+1);
-                                    entRender.Texture = Globals.Textures["floor" + texture];
-                                }
-                                break;
-                        }
-                        PositionVector entPositionVector = new PositionVector();
-                        entPositionVector.X = (RoomX * Globals.TILE_WIDTH) + (i * Globals.TILE_WIDTH); //convert to global position
-                        entPositionVector.Y = (RoomY * Globals.TILE_HEIGHT) + (j * Globals.TILE_HEIGHT); //convert to global position
-                        TileEnt.AddComponent(entPositionVector);
-                        TileEnt.AddComponent(entRender);
+                        int texture = randTex.Next(1, Globals.FLOORS_COUNT + 1);
+                        Tile TileEnt = new Tile(Globals.Textures["floor" + texture], new Vector2((RoomX * Globals.TILE_WIDTH) + (i * Globals.TILE_WIDTH), (RoomY * Globals.TILE_HEIGHT) + (j * Globals.TILE_HEIGHT))); //convert to global position
                         TileEnt.TileType = RoomTiles[i, j];
                         entities[i,j] = TileEnt;
                     }
