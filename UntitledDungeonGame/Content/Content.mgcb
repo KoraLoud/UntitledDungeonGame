@@ -133,18 +133,6 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/floor4.png
 
-#begin Tiles/inner_bottom.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/inner_bottom.png
-
 #begin Tiles/inner_left.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -265,18 +253,6 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/inner_up.png
 
-#begin Tiles/outer_bottom.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/outer_bottom.png
-
 #begin Tiles/outer_bottomleftcorner.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -349,6 +325,30 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/topwall_leftright.png
 
+#begin Tiles/topwall_leftrightsmall.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiles/topwall_leftrightsmall.png
+
+#begin Tiles/topwall_leftsmall.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiles/topwall_leftsmall.png
+
 #begin Tiles/topwall_right.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -360,6 +360,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Tiles/topwall_right.png
+
+#begin Tiles/topwall_rightsmall.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiles/topwall_rightsmall.png
 
 #begin Tiles/topwall0.png
 /importer:TextureImporter
@@ -373,6 +385,18 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/topwall0.png
 
+#begin Tiles/topwall0small.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiles/topwall0small.png
+
 #begin Tiles/topwall1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -384,6 +408,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Tiles/topwall1.png
+
+#begin Tiles/topwall1small.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiles/topwall1small.png
 
 #begin Tiles/wall_left.png
 /importer:TextureImporter
