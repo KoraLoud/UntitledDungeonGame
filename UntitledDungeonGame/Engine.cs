@@ -35,7 +35,6 @@ namespace UntitledDungeonGame
         public Scene MainMenuScene;
         public Scene MainGameScene;
 
-        //public GameState CurrentGameState;
 
         public Dungeon MainDungeon;
 
@@ -49,7 +48,6 @@ namespace UntitledDungeonGame
             Camera.Zoom = 0.8f;
 
             IsMouseVisible = true;
-            //CurrentGameState = GameState.MainMenu;
 
             //scene constructors
             MainMenuScene = new Scene();
@@ -64,8 +62,6 @@ namespace UntitledDungeonGame
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             CameraDude = new Entity(); //entity that exists just to hold our logic for moving camera
             Input cameraDudeInput = new Input();
             int cameraSpeed = 5;
@@ -164,8 +160,6 @@ namespace UntitledDungeonGame
                     Globals.Textures.Add(fileName, Content.Load<Texture2D>("Tiles/"+fileName));
                 }
             }
-
-            Console.WriteLine(Globals.Textures.ToString());
             
 
 
@@ -253,18 +247,6 @@ namespace UntitledDungeonGame
 
 
             SceneManager.CurrentScene.PostUpdate(gameTime);
-
-
-
-            /*FpsCounter++;
-            MilisecondsElapsed += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if(MilisecondsElapsed >= 1000)
-            {
-                FPS = FpsCounter;
-                FpsCounter = 0;
-                MilisecondsElapsed = 0;
-            }
-            Window.Title = Title + " - FPS: " + FPS; */
 
             foreach (Entity tile in SceneManager.CurrentScene.SceneEntities)
             {
