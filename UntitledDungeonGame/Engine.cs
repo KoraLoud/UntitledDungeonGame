@@ -246,7 +246,6 @@ namespace UntitledDungeonGame
             // TODO: Add your update logic
             SceneManager.CurrentScene.PreUpdate(gameTime);
 
-
             //Console.WriteLine(Camera.GetMouseWorldPosition());
             //Console.WriteLine(Camera.GetMouseWorldPosition());
             SceneManager.CurrentScene.Update(gameTime);
@@ -325,7 +324,7 @@ namespace UntitledDungeonGame
             spriteBatch.End();
 
             //game world sprite batch
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Camera.TransformMatrix());
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Camera.TransformMatrix(gameTime));
             SceneManager.CurrentScene.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
