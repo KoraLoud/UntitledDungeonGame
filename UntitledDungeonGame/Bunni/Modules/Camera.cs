@@ -11,10 +11,11 @@ namespace Bunni.Resources.Modules
 {
     public static class Camera
     {
-        public static int VirtualWidth;
-        public static int VirtualHeight;
-        public static int ActualHeight;
-        public static int ActualWidth;
+        public static int VirtualWidth { get; private set; }
+        public static int VirtualHeight { get; private set; }
+        public static int ActualHeight { get; private set; }
+        public static int ActualWidth { get; private set; }
+        public static bool Lerping { get; private set; }
 
         private static GraphicsDeviceManager Graphics;
         private static Vector2 _Position;
@@ -131,7 +132,7 @@ namespace Bunni.Resources.Modules
         public static Vector2 GetEntityScreenPosition(Entity e)
         {
             PositionVector PositionVec = e.GetComponent<PositionVector>();
-            if(PositionVec != null)
+            if (PositionVec != null)
             {
                 Vector2 newPos = WorldPosToScreenPos(PositionVec.Position);
                 return newPos;
@@ -140,24 +141,70 @@ namespace Bunni.Resources.Modules
 
         }
 
+        private static int ElapsedTime = 0;
+
         /// <summary>
         /// Gets the Matrix from the camera. Call this in the SpriteBatch.Begin() function before drawing.
         /// </summary>
         /// <returns></returns>
-        public static Matrix TransformMatrix()
+        public static Matrix TransformMatrix(GameTime gameTime)
         {
-            if(Updated)
+            ElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            if (Updated)
             {
                 Transform = Matrix.CreateTranslation(new Vector3(-Position, 0)) *
                     Matrix.CreateRotationZ(Rotation) *
-                    Matrix.CreateScale(new Vector3(Zoom*((float)ActualWidth/VirtualWidth), Zoom*((float)ActualHeight/VirtualHeight), 1)) *
+                    Matrix.CreateScale(new Vector3(Zoom * ((float)ActualWidth / VirtualWidth), Zoom * ((float)ActualHeight / VirtualHeight), 1)) *
                     //Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
                     Matrix.CreateTranslation(new Vector3(Origin, 0));
 
                 Updated = false;
             }
 
+            if (Lerping)
+            {
+                if (initialFrame)
+                {
+                    startTime = ElapsedTime;
+                    stopTime += ElapsedTime;
+                    StartPosition = Position;
+                    initialFrame = false;
+                }
+
+                float percentage = (ElapsedTime - startTime) / ((float)stopTime - startTime);
+                if (percentage >= 1)
+                {
+                    Lerping = false;
+                }
+                else
+                {
+                    Position = new Vector2(StartPosition.X + (LerpPosition.X - StartPosition.X) * percentage, StartPosition.Y + (LerpPosition.Y - StartPosition.Y) * percentage);
+                }
+            }
+            ElapsedTime %= 100000;
+            startTime %= 100000;
+            stopTime %= 100000;
             return Transform;
+        }
+
+        private static Vector2 StartPosition;
+        private static Vector2 LerpPosition;
+        private static bool initialFrame = false;
+        private static int startTime;
+        private static int stopTime;
+
+        /// <summary>
+        /// Transition the camera to a new position over time. Duration is in miliseconds
+        /// </summary>
+        /// <param name="lerpPosition"></param>
+        /// <param name="duration"></param>
+        public static void Lerp(Vector2 lerpPosition, int duration)
+        {
+            LerpPosition = lerpPosition;
+            Lerping = true;
+            initialFrame = true;
+            stopTime = duration;
+
         }
 
     }
