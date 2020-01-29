@@ -13,6 +13,7 @@ namespace Bunni.Resources.Components
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public Vector2 Acceleration { get; set; }
+        public bool Lerping { get; private set; } = false;
 
         public float X
         {
@@ -80,7 +81,6 @@ namespace Bunni.Resources.Components
 
         private Vector2 StartPosition;
         private Vector2 LerpPosition;
-        private bool Lerping = false;
         private bool initialFrame = false;
         private int startTime;
         private int stopTime;

@@ -8,8 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-//rewrite upper wall corner code
-//fill grid w tiles and go back and set textures
 
 namespace UntitledDungeonGame.Resources.Game
 {
@@ -26,8 +24,8 @@ namespace UntitledDungeonGame.Resources.Game
 
         public int DungeonWidth;
         public int DungeonHeight;
-        /*public Vector2 DungeonSpawn;
-        public Vector2 DungeonEnd;*/
+        public Vector2 DungeonSpawn;
+        public Vector2 DungeonEnd;
 
         public Dungeon(int maxRooms, int roomMinSize, int roomMaxSize, int dungeonWidth, int dungeonHeight)
         {
@@ -103,10 +101,9 @@ namespace UntitledDungeonGame.Resources.Game
             DungeonRoom SpawnRoom = Rooms.ElementAt(StartRoomNumber);
             int x = randRoom.Next(1, SpawnRoom.RoomWidth);
             int y = randRoom.Next(1, SpawnRoom.RoomHeight);
-            //DungeonSpawn = new Vector2(SpawnRoom.RoomX * x, SpawnRoom.RoomY * y);
-            //SpawnRoom.RoomTiles[x, y] = Tile.Entrance;
             DungeonTileGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y] = DTypes.TileType.Entrance;
             DungeonEntityGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y].TileType = DTypes.TileType.Entrance;
+            DungeonSpawn = new Vector2(SpawnRoom.RoomX + x, SpawnRoom.RoomY + y);
 
             //create exit
             int EndRoomNumber = randRoom.Next(Rooms.Count);
@@ -118,9 +115,9 @@ namespace UntitledDungeonGame.Resources.Game
             DungeonRoom EndRoom = Rooms.ElementAt(EndRoomNumber);
             int ex = randRoom.Next(1, EndRoom.RoomWidth);
             int ey = randRoom.Next(1, EndRoom.RoomHeight);
-            //DungeonEnd = new Vector2(EndRoom.RoomX * ex, EndRoom.RoomY * ey);
             DungeonTileGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey] = DTypes.TileType.Exit;
             DungeonEntityGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey].TileType = DTypes.TileType.Exit;
+            DungeonEnd = new Vector2(EndRoom.RoomX + ex, EndRoom.RoomY + ey);
 
             //create items
             //create enemies
@@ -226,13 +223,6 @@ namespace UntitledDungeonGame.Resources.Game
         {
             if (DungeonTileGrid[x, y] != DTypes.TileType.Wall) return false;
             if (DungeonTileGrid[x, y + 1] != DTypes.TileType.Floor) return false;
-            /*for (int k = 1; k < Math.Min(y, 2); k++)
-            {
-                if (DungeonTileGrid[x, y - k] == Tile.Floor)
-                {
-                    return false;
-                }
-            }*/
             return true;
         }
 

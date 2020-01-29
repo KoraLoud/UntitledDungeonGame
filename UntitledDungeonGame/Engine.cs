@@ -65,7 +65,7 @@ namespace UntitledDungeonGame
             CameraDude = new Entity(); //entity that exists just to hold our logic for moving camera
             Input cameraDudeInput = new Input();
             int cameraSpeed = 5;
-            cameraDudeInput.BindKey(Keys.W, (pressed, held) =>
+            cameraDudeInput.BindKey(Keys.Up, (pressed, held) =>
             {
                 if (pressed || held)
                 {
@@ -73,7 +73,7 @@ namespace UntitledDungeonGame
                 }
             });
 
-            cameraDudeInput.BindKey(Keys.A, (pressed, held) =>
+            cameraDudeInput.BindKey(Keys.Left, (pressed, held) =>
             {
                 if (pressed || held)
                 {
@@ -81,7 +81,7 @@ namespace UntitledDungeonGame
                 }
             });
 
-            cameraDudeInput.BindKey(Keys.S, (pressed, held) =>
+            cameraDudeInput.BindKey(Keys.Down, (pressed, held) =>
             {
                 if (pressed || held)
                 {
@@ -89,7 +89,7 @@ namespace UntitledDungeonGame
                 }
             });
 
-            cameraDudeInput.BindKey(Keys.D, (pressed, held) =>
+            cameraDudeInput.BindKey(Keys.Right, (pressed, held) =>
             {
                 if (pressed || held)
                 {
@@ -160,8 +160,8 @@ namespace UntitledDungeonGame
                     Globals.Textures.Add(fileName, Content.Load<Texture2D>("Tiles/"+fileName));
                 }
             }
-            
 
+            Globals.Textures.Add("blank", Content.Load<Texture2D>("blank"));
 
             //main menu
             {
@@ -209,8 +209,10 @@ namespace UntitledDungeonGame
                 }
                 Camera.Position = new Vector2((MainDungeon.DungeonWidth / 2) * Globals.TILE_WIDTH, (MainDungeon.DungeonHeight / 2) * Globals.TILE_HEIGHT);
                 Camera.Zoom = 0.15f;
-
                 MainGameScene.AddEntity(CameraDude);
+                SceneManager.CurrentDungeon = MainDungeon;
+                Player player = new Player();
+                MainGameScene.AddEntity(player);
             });
 
             SceneManager.ChangeScene(MainMenuScene);
