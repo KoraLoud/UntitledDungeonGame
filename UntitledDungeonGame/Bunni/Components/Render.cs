@@ -17,8 +17,9 @@ namespace Bunni.Resources.Components
         public Rectangle RenderRectangle { get; set; }
         public bool Visible { get; set; } = true;
         public int ZLayer { get; set; } = 1;
+        public Vector2 DrawOffset { get; set; } = Vector2.Zero;
 
-        private PositionVector Position { get; set; }
+        private PositionVector PositionVec { get; set; }
 
         public Render(Texture2D texture)
         {
@@ -30,19 +31,19 @@ namespace Bunni.Resources.Components
         public override void ComponentAdded()
         {
             PositionVector pos = Parent.GetComponent<PositionVector>();
-            Position = pos;
+            PositionVec = pos;
         }
 
         public override void Update(GameTime gameTime, Scene scene)
         {
-            Position = Parent.GetComponent<PositionVector>();
+            PositionVec = Parent.GetComponent<PositionVector>();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (Visible)
             {
-                spriteBatch.Draw(Texture, Position.Position, RenderRectangle, Color);
+                spriteBatch.Draw(Texture, PositionVec.Position+DrawOffset, RenderRectangle, Color);
             }
             
         }

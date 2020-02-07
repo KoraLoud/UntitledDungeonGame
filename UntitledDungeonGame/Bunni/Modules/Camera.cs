@@ -171,16 +171,19 @@ namespace Bunni.Resources.Modules
                     initialFrame = false;
                 }
 
-                float percentage = (ElapsedTime - startTime) / ((float)stopTime - startTime);
-                if (percentage >= 1)
+                float percentage = Math.Min((ElapsedTime - startTime) / ((float)stopTime - startTime), 1);
+                Position = new Vector2(StartPosition.X + (LerpPosition.X - StartPosition.X) * percentage, StartPosition.Y + (LerpPosition.Y - StartPosition.Y) * percentage);
+                if(Finished)
                 {
                     Lerping = false;
                 }
-                else
+                if(percentage == 1 && !Finished)
                 {
-                    Position = new Vector2(StartPosition.X + (LerpPosition.X - StartPosition.X) * percentage, StartPosition.Y + (LerpPosition.Y - StartPosition.Y) * percentage);
+                    Finished = true;
                 }
+
             }
+
             ElapsedTime %= 100000;
             startTime %= 100000;
             stopTime %= 100000;
@@ -192,19 +195,20 @@ namespace Bunni.Resources.Modules
         private static bool initialFrame = false;
         private static int startTime;
         private static int stopTime;
+        private static bool Finished = true;
 
         /// <summary>
-        /// Transition the camera to a new position over time. Duration is in miliseconds
+        /// Lerp camera to one position to another
         /// </summary>
         /// <param name="lerpPosition"></param>
         /// <param name="duration"></param>
         public static void Lerp(Vector2 lerpPosition, int duration)
         {
-            LerpPosition = lerpPosition;
             Lerping = true;
             initialFrame = true;
             stopTime = duration;
-
+            LerpPosition = lerpPosition;
+            Finished = false;
         }
 
     }

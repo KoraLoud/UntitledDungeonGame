@@ -104,7 +104,6 @@ namespace UntitledDungeonGame.Resources.Game
             DungeonTileGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y] = DTypes.TileType.Entrance;
             DungeonEntityGrid[SpawnRoom.RoomX + x, SpawnRoom.RoomY + y].TileType = DTypes.TileType.Entrance;
             DungeonSpawn = new Vector2(SpawnRoom.RoomX + x, SpawnRoom.RoomY + y);
-
             //create exit
             int EndRoomNumber = randRoom.Next(Rooms.Count);
             if(EndRoomNumber==StartRoomNumber)
@@ -117,6 +116,7 @@ namespace UntitledDungeonGame.Resources.Game
             int ey = randRoom.Next(1, EndRoom.RoomHeight);
             DungeonTileGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey] = DTypes.TileType.Exit;
             DungeonEntityGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey].TileType = DTypes.TileType.Exit;
+            DungeonEntityGrid[EndRoom.RoomX + ex, EndRoom.RoomY + ey].GetComponent<Render>().Texture = Globals.Textures["stairs"];
             DungeonEnd = new Vector2(EndRoom.RoomX + ex, EndRoom.RoomY + ey);
 
             //create items

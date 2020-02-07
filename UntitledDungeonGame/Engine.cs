@@ -161,6 +161,20 @@ namespace UntitledDungeonGame
                 }
             }
 
+
+            //load characters
+            dir = new DirectoryInfo(Content.RootDirectory + "/Characters");
+            if (dir.Exists)
+            {
+                FileInfo[] files = dir.GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    string fileName = file.Name.Split('.')[0];
+                    Globals.Textures.Add(fileName, Content.Load<Texture2D>("Characters/" + fileName));
+                }
+            }
+
+
             Globals.Textures.Add("blank", Content.Load<Texture2D>("blank"));
 
             //main menu

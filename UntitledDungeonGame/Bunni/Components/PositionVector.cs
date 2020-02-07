@@ -61,14 +61,15 @@ namespace Bunni.Resources.Components
                     initialFrame = false;
                 }
 
-                float percentage = (ElapsedTime - startTime) / ((float)stopTime - startTime);
-                if (percentage >= 1)
+                float percentage = Math.Min((ElapsedTime - startTime) / ((float)stopTime - startTime), 1);
+                Position = new Vector2(StartPosition.X + (LerpPosition.X - StartPosition.X) * percentage, StartPosition.Y + (LerpPosition.Y - StartPosition.Y) * percentage);
+                if(Finished)
                 {
                     Lerping = false;
                 }
-                else
+                if(percentage == 1 && !Finished)
                 {
-                    Position = new Vector2(StartPosition.X + (LerpPosition.X - StartPosition.X) * percentage, StartPosition.Y + (LerpPosition.Y - StartPosition.Y) * percentage);
+                    Finished = true;
                 }
 
             }
@@ -84,12 +85,14 @@ namespace Bunni.Resources.Components
         private bool initialFrame = false;
         private int startTime;
         private int stopTime;
+        private bool Finished = true;
         public void Lerp(Vector2 lerpPosition, int duration)
         {
             Lerping = true;
             initialFrame = true;
             stopTime = duration;
             LerpPosition = lerpPosition;
+            Finished = false;
         }
 
     }

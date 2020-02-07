@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UntitledDungeonGame.Bunni.Components;
 
 namespace UntitledDungeonGame.Resources.Game
 {
@@ -23,10 +24,37 @@ namespace UntitledDungeonGame.Resources.Game
             playerPosition.Position = Globals.GridToWorld(SceneManager.CurrentDungeon.DungeonSpawn);
             Vector2 playerGridPosition = SceneManager.CurrentDungeon.DungeonSpawn;
             AddComponent(playerPosition);
-            Render playerRender = new Render(Globals.Textures["blank"]);
+            Render playerRender = new Render(Globals.Textures["Char1"]);
+            playerRender.DrawOffset = new Vector2(22.5f, -76.5f);
             playerRender.ZLayer = -1;
             AddComponent(playerRender);
             Input playerInput = new Input();
+
+            //AnimationAtlas playerAnimationAtlas = new AnimationAtlas(Globals.Textures["Char1"], 10);
+            //AddComponent(playerAnimationAtlas);
+
+            /*
+             * Animation atlas rework
+             * 
+             * animation atlas class is filled w info about the texture, frames, rectangles
+             * animation class holds all a player's animation tracks. this is a component.
+             *      This class creates the atlases and tracks and gives them the info they need about the entity that controls them
+             * animation track class sets the frames that get animated in an atlas, the speed, if it loops, play, stop, resume, pause controls
+             */
+
+            /*
+             * PLAYER ANIMATIONS:
+             * Frame 1: looking at camera
+             * Frame 2: looking right
+             * Frame 3: looking back
+             * Frame 4: looking left
+             * Frame 5 & 6: Running forward
+             * Frame 7: walking right
+             * Frame 8: walking left
+             * Frame 9 & 10: Running up
+             * 
+            */
+            //up
             playerInput.BindKey(Keys.W, (pressed, held) =>
             {
                 if(pressed || !pressed && held && Sprinting && !playerPosition.Lerping)
@@ -35,10 +63,12 @@ namespace UntitledDungeonGame.Resources.Game
                     {
                         playerGridPosition.Y -= 1;
                         playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        
                     }
                 }
             });
 
+            //left
             playerInput.BindKey(Keys.A, (pressed, held) =>
             {
                 if (pressed || !pressed && held && Sprinting && !playerPosition.Lerping)
@@ -51,6 +81,7 @@ namespace UntitledDungeonGame.Resources.Game
                 }
             });
 
+            //down
             playerInput.BindKey(Keys.S, (pressed, held) =>
             {
                 if (pressed || !pressed && held && Sprinting && !playerPosition.Lerping)
@@ -63,6 +94,7 @@ namespace UntitledDungeonGame.Resources.Game
                 }
             });
 
+            //right
             playerInput.BindKey(Keys.D, (pressed, held) =>
             {
                 if (pressed|| !pressed && held && Sprinting && !playerPosition.Lerping)

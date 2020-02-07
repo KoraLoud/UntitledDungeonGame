@@ -42,6 +42,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Bunni\Components\Animation.cs" />
+    <Compile Include="Bunni\Components\AnimationTrack.cs" />
+    <Compile Include="Bunni\Components\AnimationAtlas.cs" />
     <Compile Include="Bunni\Components\Collision\BoxCollider.cs" />
     <Compile Include="Bunni\Components\Collision\Collider.cs" />
     <Compile Include="Bunni\Components\Collision\ICollider.cs" />
