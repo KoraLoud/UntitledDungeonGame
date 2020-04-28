@@ -14,7 +14,7 @@ namespace UntitledDungeonGame.Resources.Game
     class Player : Entity
     {
 
-        public int MoveSpeed { get; set; } = 100; //in miliseconds
+        public int MoveSpeed { get; set; } = 200; //in miliseconds
 
         public bool Sprinting { get; set; } = false;
 
@@ -32,6 +32,15 @@ namespace UntitledDungeonGame.Resources.Game
 
             //AnimationAtlas playerAnimationAtlas = new AnimationAtlas(Globals.Textures["Char1"], 10);
             //AddComponent(playerAnimationAtlas);
+            Animation playerAnimation = new Animation();
+            AddComponent(playerAnimation);
+
+            playerAnimation.AddAtlas("StdPlayer1", Globals.Textures["Char1"], 10);
+            playerAnimation.SetDefaultAtlus("StdPlayer1");
+            playerAnimation.AddAnimation("RunningUp", 8, 9, 2, null, MoveSpeed/2);
+            playerAnimation.AddAnimation("RunningForward", 4, 5, 0, null, MoveSpeed/2);
+            playerAnimation.AddAnimation("RunningRight", 6, 6, 1, null, MoveSpeed);
+            playerAnimation.AddAnimation("RunningLeft", 7, 7, 3, null, MoveSpeed);
 
             /*
              * Animation atlas rework
@@ -44,14 +53,14 @@ namespace UntitledDungeonGame.Resources.Game
 
             /*
              * PLAYER ANIMATIONS:
-             * Frame 1: looking at camera
-             * Frame 2: looking right
-             * Frame 3: looking back
-             * Frame 4: looking left
-             * Frame 5 & 6: Running forward
-             * Frame 7: walking right
-             * Frame 8: walking left
-             * Frame 9 & 10: Running up
+             * Frame 0: looking at camera
+             * Frame 1: looking right
+             * Frame 2: looking back
+             * Frame 3: looking left
+             * Frame 4 & 5: Running forward
+             * Frame 6: walking right
+             * Frame 7: walking left
+             * Frame 8 & 9: Running up
              * 
             */
             //up
@@ -63,6 +72,7 @@ namespace UntitledDungeonGame.Resources.Game
                     {
                         playerGridPosition.Y -= 1;
                         playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        playerAnimation.PlayAnimation("RunningUp");
                         
                     }
                 }
@@ -77,6 +87,7 @@ namespace UntitledDungeonGame.Resources.Game
                     {
                         playerGridPosition.X -= 1;
                         playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        playerAnimation.PlayAnimation("RunningLeft");
                     }
                 }
             });
@@ -90,6 +101,7 @@ namespace UntitledDungeonGame.Resources.Game
                     {
                         playerGridPosition.Y += 1;
                         playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        playerAnimation.PlayAnimation("RunningForward");
                     }
                 }
             });
@@ -103,6 +115,7 @@ namespace UntitledDungeonGame.Resources.Game
                     {
                         playerGridPosition.X += 1;
                         playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        playerAnimation.PlayAnimation("RunningRight");
                     }
                 }
             });
@@ -112,12 +125,12 @@ namespace UntitledDungeonGame.Resources.Game
                 if (pressed || held)
                 {
                     Sprinting = true;
-                    MoveSpeed = 50;
+                    MoveSpeed = 100;
                 }
                 else
                 {
                     Sprinting = false;
-                    MoveSpeed = 100;
+                    MoveSpeed = 200;
                 }
             });
 

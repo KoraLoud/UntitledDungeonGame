@@ -10,6 +10,7 @@ namespace UntitledDungeonGame.Bunni.Components
 {
     public class AnimationAtlas
     {
+        public Animation AnimationComponent { get; set; }
         /// <summary>
         /// The sprite atlas that has all the sprite's animation frames on it
         /// </summary>
@@ -23,9 +24,12 @@ namespace UntitledDungeonGame.Bunni.Components
         /// Rectangles for each of the sprites in the atlas
         /// </summary>
         public Rectangle[] Rectangles;
+        public int Idle = 0;
 
-        public AnimationAtlas(Texture2D atlas, int frames)
+        public AnimationAtlas(Texture2D atlas, int frames, Animation Component)
         {
+            Texture = atlas;
+            AnimationComponent = Component;
             Rectangles = new Rectangle[frames];
             int width = atlas.Width / frames;
             for (int i = 0; i < frames; i++)

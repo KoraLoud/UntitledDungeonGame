@@ -15,6 +15,7 @@ namespace Bunni.Resources.Components
     {
 
         public AnimationAtlas Atlas;
+        public Animation AnimationComponent;
         /// <summary>
         /// The amount of miliseconds in between each frame
         /// </summary>
@@ -32,16 +33,25 @@ namespace Bunni.Resources.Components
         /// </summary>
         public int CurrentFrame { get; set; } = 0;
 
+        public int startFrame;
+        public int endFrame;
+        public int Idle;
+        public bool specificAtlas;
+
         /// <summary>
         /// This variable holds the amount of frames that have passed
         /// The animation will only move to the next frame when this equals AnimationSpeed
         /// </summary>
-        private int AnimationHeartbeat;
+        private int AnimationHeartbeat = 0;
 
 
-        public AnimationTrack(AnimationAtlas atlas)
+        public AnimationTrack(Animation AnimComp, AnimationAtlas atlas, int startframe, int endframe, int idle)
         {
+            AnimationComponent = AnimComp;
             Atlas = atlas;
+            startFrame = startframe;
+            endFrame = endframe;
+            Idle = idle;
         }
 
         public void Update(GameTime gameTime, Scene scene)
@@ -54,24 +64,24 @@ namespace Bunni.Resources.Components
                     AnimationHeartbeat = 0;
                     CurrentFrame++;
                 }
-                if(CurrentFrame>=Atlas.Frames)
+                if(CurrentFrame>endFrame)
                 {
                     if(Loop)
                     {
-                        CurrentFrame = 0;
+                        CurrentFrame = startFrame;
                     }
                     else
                     {
                         Stop();
                     }
                 }
-                /*Render EntityRenderComp = Parent.GetComponent<Render>();
-                EntityRenderComp.RenderRectangle = Rectangles[CurrentFrame];
-                Collider EntityCollider = Parent.GetComponent<Collider>();
+                Render EntityRenderComp = AnimationComponent.Parent.GetComponent<Render>();
+                EntityRenderComp.RenderRectangle = Atlas.Rectangles[CurrentFrame];
+                Collider EntityCollider = AnimationComponent.Parent.GetComponent<Collider>();
                 if(EntityCollider != null)
                 {
                     EntityCollider.Hitbox.Width = Atlas.Texture.Width / Atlas.Frames;
-                }*/
+                }
             }
         }
 
@@ -80,20 +90,25 @@ namespace Bunni.Resources.Components
         /// </summary>
         public void Stop()
         {
-            CurrentFrame = 0;
+            CurrentFrame = Idle;
             IsPlaying = false;
+            AnimationComponent.CurrentAnimation = null;
+            Render EntityRenderComp = AnimationComponent.Parent.GetComponent<Render>();
+            EntityRenderComp.RenderRectangle = Atlas.Rectangles[Idle];
         }
 
         /// <summary>
         /// Starts the animation from the begining
         /// </summary>
-        /*public void Play()
+        public void Play()
         {
-            CurrentFrame = 0;
+            AnimationComponent.CurrentAnimation = this;
+            CurrentFrame = startFrame;
             IsPlaying = true;
-            Render EntityRenderComp = Parent.GetComponent<Render>();
-            EntityRenderComp.Texture = Atlas;
-            EntityRenderComp.RenderRectangle = Rectangles[0];
+            Entity ParentEntity = AnimationComponent.Parent;
+            Render EntityRenderComp = ParentEntity.GetComponent<Render>();
+            EntityRenderComp.Texture = Atlas.Texture;
+            EntityRenderComp.RenderRectangle = Atlas.Rectangles[startFrame];
         }
 
         /// <summary>
@@ -110,14 +125,15 @@ namespace Bunni.Resources.Components
         public void Resume()
         {
             IsPlaying = true;
-            Render EntityRenderComp = Parent.GetComponent<Render>();
-            EntityRenderComp.Texture = Atlas;
-            EntityRenderComp.RenderRectangle = Rectangles[CurrentFrame];
+            Entity ParentEntity = AnimationComponent.Parent;
+            Render EntityRenderComp = ParentEntity.GetComponent<Render>();
+            EntityRenderComp.Texture = Atlas.Texture;
+            EntityRenderComp.RenderRectangle = Atlas.Rectangles[CurrentFrame];
         }
 
         public void SetFrame(int frame)
         {
-            Parent.GetComponent<Render>().RenderRectangle = Rectangles[frame];
-        }*/
+            AnimationComponent.Parent.GetComponent<Render>().RenderRectangle = Atlas.Rectangles[frame];
+        }
     }
 }
