@@ -103,18 +103,6 @@ namespace Bunni.Resources.Modules
         }
 
         /// <summary>
-        /// Gets the world position of the mouse
-        /// </summary>
-        /// <returns></returns>
-        public static Vector2 GetMouseWorldPosition()
-        {
-            MouseState mouse = Mouse.GetState();
-            Vector2 mouseCoors = new Vector2(mouse.X, mouse.Y);
-            Vector2 WorldPos = Vector2.Transform(mouseCoors, Matrix.Invert(Transform));
-            return WorldPos;
-        }
-
-        /// <summary>
         /// Takes a world position, then returns where it is at on the screen
         /// </summary>
         /// <param name="pos"></param>
@@ -131,14 +119,8 @@ namespace Bunni.Resources.Modules
         /// <returns></returns>
         public static Vector2 GetEntityScreenPosition(Entity e)
         {
-            PositionVector PositionVec = e.GetComponent<PositionVector>();
-            if (PositionVec != null)
-            {
-                Vector2 newPos = WorldPosToScreenPos(PositionVec.Position);
-                return newPos;
-            }
-            return Vector2.Zero;
-
+            Vector2 newPos = WorldPosToScreenPos(e.Transform.Position);
+            return newPos;
         }
 
         private static int ElapsedTime = 0;

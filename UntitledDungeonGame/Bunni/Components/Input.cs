@@ -266,5 +266,19 @@ namespace Bunni.Resources.Components
                 KeyPressedCallback = _callback;
             }
         }
+
+
+        /// <summary>
+        /// Returns where in the game world the mouse is pointing
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 GetGlobalMousePosition()
+        {
+            MouseState mouse = Mouse.GetState();
+            Vector2 mouseCoors = new Vector2(mouse.X, mouse.Y);
+            Vector2 WorldPos = Vector2.Transform(mouseCoors, Matrix.Invert(Camera.Transform));
+            return WorldPos;
+        }
+
     }
 }

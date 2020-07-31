@@ -29,6 +29,7 @@ namespace UntitledDungeonGame.Bunni.Components
         public AnimationAtlas(Texture2D atlas, int frames, Animation Component)
         {
             Texture = atlas;
+            Frames = frames;
             AnimationComponent = Component;
             Rectangles = new Rectangle[frames];
             int width = atlas.Width / frames;

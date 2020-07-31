@@ -49,8 +49,8 @@ namespace Bunni.Resources.Components.Collision
 
         public void ComponentAdded()
         {
-            Render rend = Parent.Parent.GetComponent<Render>();
-            if (rend != null)
+            Render rend = Parent.Parent.Render;
+            if (rend.Texture != null)
             {
                 Width = rend.Texture.Width;
                 Height = rend.Texture.Height;
@@ -68,7 +68,7 @@ namespace Bunni.Resources.Components.Collision
 
         public bool IntersectsOnLayer(ICollider c2)
         {
-            if(Parent.CollisionLayer == c2.Parent.CollisionLayer)
+            if (Parent.CollisionLayer == c2.Parent.CollisionLayer)
             {
                 return Intersects(c2);
             }
@@ -80,7 +80,7 @@ namespace Bunni.Resources.Components.Collision
 
         public bool IntersectsWithTag(ICollider c2, BniTypes.Tag Tag)
         {
-            if(Tag == c2.Parent.Parent.Tag)
+            if (Tag == c2.Parent.Parent.Tag)
             {
                 return Intersects(c2);
             }

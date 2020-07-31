@@ -20,14 +20,13 @@ namespace UntitledDungeonGame.Resources.Game
 
         public Player()
         {
-            PositionVector playerPosition = new PositionVector();
-            playerPosition.Position = Globals.GridToWorld(SceneManager.CurrentDungeon.DungeonSpawn);
+            string charTexName = "Char1_3";
+
+            Transform.Position = Globals.GridToWorld(SceneManager.CurrentDungeon.DungeonSpawn);
             Vector2 playerGridPosition = SceneManager.CurrentDungeon.DungeonSpawn;
-            AddComponent(playerPosition);
-            Render playerRender = new Render(Globals.Textures["Char1"]);
-            playerRender.DrawOffset = new Vector2(22.5f, -76.5f);
-            playerRender.ZLayer = -1;
-            AddComponent(playerRender);
+            Render.DrawOffset = new Vector2(22.5f, -76.5f);
+            Render.ZLayer = -1;
+            Render.ChangeTexture(Globals.Textures[charTexName]);
             Input playerInput = new Input();
 
             //AnimationAtlas playerAnimationAtlas = new AnimationAtlas(Globals.Textures["Char1"], 10);
@@ -35,7 +34,7 @@ namespace UntitledDungeonGame.Resources.Game
             Animation playerAnimation = new Animation();
             AddComponent(playerAnimation);
 
-            playerAnimation.AddAtlas("StdPlayer1", Globals.Textures["Char1"], 10);
+            playerAnimation.AddAtlas("StdPlayer1", Globals.Textures[charTexName], 10);
             playerAnimation.SetDefaultAtlus("StdPlayer1");
             playerAnimation.AddAnimation("RunningUp", 8, 9, 2, null, MoveSpeed/2);
             playerAnimation.AddAnimation("RunningForward", 4, 5, 0, null, MoveSpeed/2);
@@ -66,12 +65,12 @@ namespace UntitledDungeonGame.Resources.Game
             //up
             playerInput.BindKey(Keys.W, (pressed, held) =>
             {
-                if(pressed || !pressed && held && Sprinting && !playerPosition.Lerping)
+                if(pressed || !pressed && held && Sprinting && !Transform.Lerping)
                 {
                     if (SceneManager.CurrentDungeon.DungeonTileGrid[(int)playerGridPosition.X, (int)playerGridPosition.Y - 1] == DTypes.TileType.Floor)
                     {
                         playerGridPosition.Y -= 1;
-                        playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        Transform.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
                         playerAnimation.PlayAnimation("RunningUp");
                         
                     }
@@ -81,12 +80,12 @@ namespace UntitledDungeonGame.Resources.Game
             //left
             playerInput.BindKey(Keys.A, (pressed, held) =>
             {
-                if (pressed || !pressed && held && Sprinting && !playerPosition.Lerping)
+                if (pressed || !pressed && held && Sprinting && !Transform.Lerping)
                 {
                     if (SceneManager.CurrentDungeon.DungeonTileGrid[(int)playerGridPosition.X - 1, (int)playerGridPosition.Y] == DTypes.TileType.Floor)
                     {
                         playerGridPosition.X -= 1;
-                        playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        Transform.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
                         playerAnimation.PlayAnimation("RunningLeft");
                     }
                 }
@@ -95,12 +94,12 @@ namespace UntitledDungeonGame.Resources.Game
             //down
             playerInput.BindKey(Keys.S, (pressed, held) =>
             {
-                if (pressed || !pressed && held && Sprinting && !playerPosition.Lerping)
+                if (pressed || !pressed && held && Sprinting && !Transform.Lerping)
                 {
                     if (SceneManager.CurrentDungeon.DungeonTileGrid[(int)playerGridPosition.X, (int)playerGridPosition.Y + 1] == DTypes.TileType.Floor)
                     {
                         playerGridPosition.Y += 1;
-                        playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        Transform.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
                         playerAnimation.PlayAnimation("RunningForward");
                     }
                 }
@@ -109,12 +108,12 @@ namespace UntitledDungeonGame.Resources.Game
             //right
             playerInput.BindKey(Keys.D, (pressed, held) =>
             {
-                if (pressed|| !pressed && held && Sprinting && !playerPosition.Lerping)
+                if (pressed|| !pressed && held && Sprinting && !Transform.Lerping)
                 {
                     if (SceneManager.CurrentDungeon.DungeonTileGrid[(int)playerGridPosition.X + 1, (int)playerGridPosition.Y] == DTypes.TileType.Floor)
                     {
                         playerGridPosition.X += 1;
-                        playerPosition.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
+                        Transform.Lerp(Globals.GridToWorld(playerGridPosition), MoveSpeed);
                         playerAnimation.PlayAnimation("RunningRight");
                     }
                 }

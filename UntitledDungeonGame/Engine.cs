@@ -34,6 +34,7 @@ namespace UntitledDungeonGame
 
         public Scene MainMenuScene;
         public Scene MainGameScene;
+        public Scene UILayerScene;
 
 
         public Dungeon MainDungeon;
@@ -52,6 +53,7 @@ namespace UntitledDungeonGame
             //scene constructors
             MainMenuScene = new Scene();
             MainGameScene = new Scene();
+            UILayerScene = new Scene();
         }
 
         /// <summary>
@@ -113,17 +115,6 @@ namespace UntitledDungeonGame
                 }
             });
 
-            cameraDudeInput.BindKey(Keys.LeftControl, (pressed, held) =>
-            {
-                if (pressed || held)
-                {
-                    Debugging = true;
-                } else
-                {
-                    Debugging = false;
-                }
-            });
-
             cameraDudeInput.BindKey(Keys.Space, (pressed, held) =>
             {
                 if (pressed)
@@ -174,25 +165,22 @@ namespace UntitledDungeonGame
                 }
             }
 
+            Texture2D PlayTexture = Content.Load<Texture2D>("Play");
+
 
             Globals.Textures.Add("blank", Content.Load<Texture2D>("blank"));
 
             //main menu
             {
-                Texture2D PlayTexture = Content.Load<Texture2D>("Play");
-                Render PlayRender = new Render(PlayTexture);
-                PositionVector PlayPosition = new PositionVector
-                {
-                    X = (Camera.VirtualWidth / 2) - PlayTexture.Width / 2,
-                    Y = (Camera.VirtualHeight / 4)
-                };
-
                 Button playButton = new Button();
-                playButton.AddComponent(PlayPosition);
-                playButton.AddComponent(PlayRender);
-                playButton.OnClick(() =>
+                playButton.AddTexture(PlayTexture);
+                playButton.Render.Transform.X = (Camera.VirtualWidth / 2) - PlayTexture.Width / 2;
+                playButton.Render.Transform.Y = (Camera.VirtualHeight / 4);
+
+                playButton.OnWorldClick(() =>
                     {
                         SceneManager.ChangeScene(MainGameScene);
+                        SceneManager.ChangeUiScene(UILayerScene);
                     });
                 MainMenuScene.AddEntity(playButton);
             }
@@ -229,6 +217,21 @@ namespace UntitledDungeonGame
                 MainGameScene.AddEntity(player);
             });
 
+            UILayerScene.SetOnLoad(() =>
+            {
+                Button AdminButton = new Button(); //temp texture
+                AdminButton.AddTexture(PlayTexture);
+                AdminButton.Transform.X = PlayTexture.Width / 2;
+                AdminButton.Transform.Y = Camera.VirtualHeight / 4;
+                AdminButton.OnScreenClick(() =>
+                {
+                    Debugging = !Debugging;
+                });
+
+                UILayerScene.AddEntity(AdminButton);
+
+            });
+
             SceneManager.ChangeScene(MainMenuScene);
 
         }
@@ -259,6 +262,11 @@ namespace UntitledDungeonGame
             //Console.WriteLine(Camera.GetMouseWorldPosition());
             //Console.WriteLine(Camera.GetMouseWorldPosition());
             SceneManager.CurrentScene.Update(gameTime);
+            if (SceneManager.CurrentUIScene != null)
+            {
+                SceneManager.CurrentUIScene.Update(gameTime);
+            }
+            
 
 
 
@@ -316,14 +324,18 @@ namespace UntitledDungeonGame
             }
             Window.Title = Title + " - FPS: " + FPS + " - " + SceneManager.CurrentScene.SceneEntities.Count + " entities in scene";
 
-            //UI spritebatch
-            spriteBatch.Begin();
-
-            spriteBatch.End();
-
             //game world sprite batch
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Camera.TransformMatrix(gameTime));
             SceneManager.CurrentScene.Draw(gameTime, spriteBatch);
+            spriteBatch.End();
+
+            //UI spritebatch
+            spriteBatch.Begin();
+            if(SceneManager.CurrentUIScene != null)
+            {
+                SceneManager.CurrentUIScene.Draw(gameTime, spriteBatch);
+            }
+            
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -19,18 +19,19 @@ namespace Bunni.Resources.Components.Collision
         public Vector2 Offset { get; set; } = Vector2.Zero;
         public ICollider Hitbox { get; set; }
         public BniTypes.CollisionLayer CollisionLayer { get; set; }
-        private PositionVector PositionVec { get; set; }
+        private Render RenderComp { get; set; }
+        private Render.TransformC Transform { get; set; }
         protected Vector2 PositionOffset { get; set; } = Vector2.Zero;
 
         public int X
         {
             get
             {
-                return (int)(PositionVec.X + Offset.X);
+                return (int)(Transform.X + Offset.X);
             }
             set
             {
-                PositionVec.Position = new Vector2(value, PositionVec.Y);
+                Transform.Position = new Vector2(value, Transform.Y);
             }
         }
 
@@ -38,29 +39,24 @@ namespace Bunni.Resources.Components.Collision
         {
             get
             {
-                return (int)(PositionVec.Y + Offset.Y);
+                return (int)(Transform.Y + Offset.Y);
             }
             set
             {
-                PositionVec.Position = new Vector2(PositionVec.X, value);
+                Transform.Position = new Vector2(Transform.X, value);
             }
         }
 
         public override void ComponentAdded()
         {
-            PositionVector pos = Parent.GetComponent<PositionVector>();
-            if (pos == null)
-            {
-                pos = new PositionVector();
-                Parent.AddComponent(pos);
-            }
+            RenderComp = Parent.GetComponent<Render>();
+            Transform = RenderComp.Transform;
 
-            PositionVec = pos;
-            if(Hitbox != null)
+            if (Hitbox != null)
             {
                 Hitbox.ComponentAdded();
             }
-            
+
         }
 
         public void CreateHitbox<T>() where T : ICollider, new()
@@ -69,7 +65,7 @@ namespace Bunni.Resources.Components.Collision
             {
                 Parent = this
             };
-            if(Parent != null)
+            if (Parent != null)
             {
                 Hitbox.ComponentAdded();
             }

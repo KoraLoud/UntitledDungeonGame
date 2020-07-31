@@ -71,22 +71,15 @@ namespace Bunni.Resources.Modules
 
         private static int SortByZ(Entity x, Entity y)
         {
-            if (x.HasComponent<Render>() && y.HasComponent<Render>())
+            Render xComponent = x.Render;
+            Render yComponent = y.Render;
+            if (xComponent.ZLayer > yComponent.ZLayer)
             {
-                Render xComponent = x.GetComponent<Render>();
-                Render yComponent = y.GetComponent<Render>();
-                if (xComponent.ZLayer > yComponent.ZLayer)
-                {
-                    return -1;
-                }
-                else if (xComponent.ZLayer < yComponent.ZLayer)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 0;
-                }
+                return -1;
+            }
+            else if (xComponent.ZLayer < yComponent.ZLayer)
+            {
+                return 1;
             }
             else
             {

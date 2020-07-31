@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bunni.Resources.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using UntitledDungeonGame.Resources.Game;
@@ -15,7 +16,33 @@ namespace Bunni.Resources.Modules
         public bool Active { get; set; } = true;
         public BniTypes.Tag Tag { get; set; }
         public DTypes.TileType TileType { get; set; }
-        
+        public Render Render;
+
+        public Render.TransformC Transform
+        {
+            get
+            {
+                return Render.Transform;
+            }
+        }
+
+        public Entity()
+        {
+            Render = new Render();
+            AddComponent(Render);
+        }
+
+        Entity(Texture2D tex)
+        {
+            Render = new Render(tex);
+            AddComponent(Render);
+        }
+
+        public void AddTexture(Texture2D tex)
+        {
+            Render.ChangeTexture(tex);
+        }
+
         /// <summary>
         /// Used to add a component to an entity
         /// </summary>
@@ -43,9 +70,9 @@ namespace Bunni.Resources.Modules
         /// <returns>The component if it exists, else it returns false</returns>
         public T GetComponent<T>() where T : Component
         {
-            foreach(var c in Components)
+            foreach (var c in Components)
             {
-                if(c is T)
+                if (c is T)
                 {
                     return c as T;
                 }
@@ -60,9 +87,9 @@ namespace Bunni.Resources.Modules
         /// <returns></returns>
         public bool HasComponent<T>() where T : Component
         {
-            foreach(var c in Components)
+            foreach (var c in Components)
             {
-                if(c is T)
+                if (c is T)
                 {
                     return true;
                 }

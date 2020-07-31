@@ -16,15 +16,9 @@ namespace UntitledDungeonGame.Resources.Game
 
         public Tile(Texture2D tex, Vector2 position)
         {
-            PositionVector posEnt = new PositionVector
-            {
-                X = position.X,
-                Y = position.Y
-            };
-
-            Render rendEnt = new Render(tex);
-            AddComponent(posEnt);
-            AddComponent(rendEnt);
+            Transform.X = position.X;
+            Transform.Y = position.Y;
+            Render.ChangeTexture(tex);
         }
 
     }

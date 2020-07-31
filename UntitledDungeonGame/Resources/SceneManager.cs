@@ -12,10 +12,17 @@ namespace UntitledDungeonGame.Resources
     {
         public static Scene CurrentScene { get; set; }
         public static Dungeon CurrentDungeon { get; set; }
+        public static Scene CurrentUIScene { get; set; }
 
         public static void ChangeScene(Scene s)
         {
             CurrentScene = s;
+            s.Load();
+        }
+
+        public static void ChangeUiScene(Scene s)
+        {
+            CurrentUIScene = s;
             s.Load();
         }
     }
