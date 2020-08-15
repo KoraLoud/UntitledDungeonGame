@@ -11,19 +11,21 @@ using UntitledDungeonGame.Bunni.Components;
 
 namespace UntitledDungeonGame.Resources.Game
 {
-    class Player : Entity
+    public class Player : Entity
     {
 
         public int MoveSpeed { get; set; } = 200; //in miliseconds
 
         public bool Sprinting { get; set; } = false;
 
+        public Vector2 playerGridPosition;
+
         public Player()
         {
             string charTexName = "Char1_3";
 
             Transform.Position = Globals.GridToWorld(SceneManager.CurrentDungeon.DungeonSpawn);
-            Vector2 playerGridPosition = SceneManager.CurrentDungeon.DungeonSpawn;
+            playerGridPosition = SceneManager.CurrentDungeon.DungeonSpawn;
             Render.DrawOffset = new Vector2(22.5f, -76.5f);
             Render.ZLayer = -1;
             Render.ChangeTexture(Globals.Textures[charTexName]);

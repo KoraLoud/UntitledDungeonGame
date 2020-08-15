@@ -38,6 +38,7 @@ namespace UntitledDungeonGame
 
 
         public Dungeon MainDungeon;
+        public Player player;
 
         public Engine()
         {
@@ -213,7 +214,7 @@ namespace UntitledDungeonGame
                 Camera.Zoom = 0.15f;
                 MainGameScene.AddEntity(CameraDude);
                 SceneManager.CurrentDungeon = MainDungeon;
-                Player player = new Player();
+                player = new Player();
                 MainGameScene.AddEntity(player);
             });
 
@@ -276,7 +277,7 @@ namespace UntitledDungeonGame
             {
                 if(tile.HasComponent<Render>())
                 {
-                    tile.GetComponent<Render>().Color = Color.White;
+                    //tile.GetComponent<Render>().Color = Color.White;
                 }
             }
 
@@ -301,6 +302,38 @@ namespace UntitledDungeonGame
                         tile.GetComponent<Render>().Color = Color.Red;
                     }
                 }
+            }
+
+            MouseState mouse = Mouse.GetState();
+            if(mouse.LeftButton == ButtonState.Pressed)
+            {
+
+                foreach (Entity tile in SceneManager.CurrentScene.SceneEntities)
+                {
+                    if (tile.HasComponent<Render>())
+                    {
+                        tile.GetComponent<Render>().Color = Color.White;
+                    }
+                }
+
+                Vector2 MousePos = Input.GetGlobalMousePosition();
+                int mouseX = (int)MousePos.X / Globals.TILE_WIDTH;
+                int mouseY = (int)MousePos.Y / Globals.TILE_HEIGHT;
+                if(SceneManager.CurrentDungeon.DungeonEntityGrid[mouseX, mouseY] != null)
+                {
+                    Tile End = SceneManager.CurrentDungeon.DungeonEntityGrid[mouseX, mouseY];
+                    Tile Start = SceneManager.CurrentDungeon.DungeonEntityGrid[(int)player.playerGridPosition.X, (int)player.playerGridPosition.Y];
+                    AStarSearch Path = new AStarSearch(Start, End);
+                    Tile index = End;
+                    while(index != Start)
+                    {
+                        index.Render.Color = Color.Yellow;
+                        index = Path.cameFrom[index];
+                    }
+                }
+                
+
+                Console.WriteLine(mouseX +" "+mouseY);
             }
 
             base.Update(gameTime);

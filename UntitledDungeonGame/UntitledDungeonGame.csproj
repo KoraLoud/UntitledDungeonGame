@@ -58,12 +58,14 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\AStarSearch.cs" />
     <Compile Include="Resources\Game\DTypes.cs" />
     <Compile Include="Resources\Game\Dungeon.cs" />
     <Compile Include="Resources\Game\Globals.cs" />
     <Compile Include="Resources\Game\Player.cs" />
     <Compile Include="Resources\Game\Tile.cs" />
     <Compile Include="Resources\Button.cs" />
+    <Compile Include="Resources\PriorityQueue.cs" />
     <Compile Include="Resources\SceneManager.cs" />
   </ItemGroup>
   <ItemGroup>

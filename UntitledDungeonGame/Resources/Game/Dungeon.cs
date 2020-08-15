@@ -13,6 +13,12 @@ namespace UntitledDungeonGame.Resources.Game
 {
     public class Dungeon
     {
+
+        /*
+         * To expand size of dungeon later:
+         *  generate same size dungeon up to n times, then randomly connect new dungeons with random hallways to random rooms in other dungeon
+         *  this should keep the same shape/general feel of the current sized dungeon without it looking too spread apart or spagetti like
+         */ 
         public List<DungeonRoom> Rooms;
         public Tile[,] DungeonEntityGrid;
         public DTypes.TileType[,] DungeonTileGrid;
@@ -55,6 +61,7 @@ namespace UntitledDungeonGame.Resources.Game
         {
             DungeonTileGrid[x, y] = e.TileType;
             DungeonEntityGrid[x, y] = e;
+            e.GridPosition = new Vector2(x, y);
         }
 
 

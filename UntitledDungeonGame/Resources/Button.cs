@@ -84,7 +84,7 @@ namespace UntitledDungeonGame.Resources.MainMenu
             {
                 MouseState mouseState = Mouse.GetState();
                 Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
-                Console.WriteLine("X: " + mouseState.X + " Y: " + mouseState.Y);
+                //Console.WriteLine("X: " + mouseState.X + " Y: " + mouseState.Y);
                 Render.TransformC pos = Render.Transform;
                 if (!(pos.X > mousePos.X
                         || pos.X + Render.Texture.Width < mousePos.X
