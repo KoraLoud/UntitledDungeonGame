@@ -1,0 +1,30 @@
+This game is going to be a turn-based dungeon crawler similar to pokemon mystery dungeon
+
+The dungeon will be randomly generated layout and loot, and will feature a number of different enemies and upgrades
+
+All art assets are temporary and can be replaced by anyone who wants to make them better
+The art style at the moment is dark and dungeon-y
+
+Nouns and verbs:
+
+Player
+- tile based movement
+- a wide array of abilities
+- followers (?)
+- level and stat system
+
+Enemies
+- only move when players move
+- premade enemies with set abilities
+- some stay far and shoot and some run up to meele
+- sometimes drop loot
+
+Map
+- randomly generated
+- length and difficulty increases as game goes on
+- find key to unlock door to next level
+
+Combat
+- player can look in the 8 directions around them
+- your main weapon decides your attack distance
+- ranged abilities and weapons
